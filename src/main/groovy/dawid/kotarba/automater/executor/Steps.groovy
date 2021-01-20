@@ -1,5 +1,6 @@
 package dawid.kotarba.automater.executor
 
+import dawid.kotarba.automater.executor.steps.keyboard.KeyboardHold
 import dawid.kotarba.automater.executor.steps.keyboard.KeyboardPress
 import dawid.kotarba.automater.executor.steps.mouse.MouseLeftClick
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveByPercentStep
@@ -21,6 +22,7 @@ class Steps {
 
         // keyboard
         steps.add(new KeyboardPress())
+        steps.add(new KeyboardHold())
 
         // mouse
         steps.add(new MouseMoveToStep())
