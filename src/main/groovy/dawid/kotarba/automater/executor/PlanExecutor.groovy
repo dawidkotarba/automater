@@ -46,7 +46,7 @@ class PlanExecutor {
     }
 
     private boolean shallSkipWhenMouseIsMoving(List<String> executionLines) {
-        def runWhenIdleMouse = executionLines.stream().anyMatch({ line -> line.contains(StepType.MOUSE.name()) & line.contains(Constants.MOUSE_IDLE) })
+        def runWhenIdleMouse = executionLines.stream().anyMatch({ line -> !isExecutionLineCommented(line) & line.contains(StepType.MOUSE.name()) & line.contains(Constants.MOUSE_IDLE) })
         runWhenIdleMouse && mouse.isMouseMoving()
     }
 
