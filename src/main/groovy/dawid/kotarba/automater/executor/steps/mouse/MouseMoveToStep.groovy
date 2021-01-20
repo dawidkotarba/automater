@@ -17,7 +17,7 @@ class MouseMoveToStep extends AbstractStep {
 
     @Override
     void execute(String executionLine) {
-        def params = getParams(executionLine)
-        mouse.moveTo(params.get(0) as int, params.get(1) as int)
+        def params = getTwoIntParams(executionLine)
+        mouse.moveTo(params.first, params.second)
     }
 }

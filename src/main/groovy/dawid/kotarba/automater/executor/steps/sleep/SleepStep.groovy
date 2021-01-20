@@ -6,8 +6,7 @@ import dawid.kotarba.automater.executor.StepType
 class SleepStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
-        def params = getParams(executionLine)
-        def sleepTime = params[0] as int
+        def sleepTime = getIntParam(executionLine)
         sleep(sleepTime)
     }
 

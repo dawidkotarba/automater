@@ -3,11 +3,11 @@ package dawid.kotarba.automater.executor.steps.mouse
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
-class MouseMoveByStep extends AbstractStep {
+class MouseMoveToPercentStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def params = getTwoIntParams(executionLine)
-        mouse.moveBy(params.first, params.second)
+        mouse.moveToPercentOfTheScreen(params.first, params.second)
     }
 
     @Override
@@ -17,6 +17,6 @@ class MouseMoveByStep extends AbstractStep {
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.of('moveBy')
+        Optional.of('moveToPercentOfTheScreen')
     }
 }

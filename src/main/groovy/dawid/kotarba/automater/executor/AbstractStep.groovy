@@ -31,4 +31,14 @@ abstract class AbstractStep implements Step {
         })
         return parameters
     }
+
+    Integer getIntParam(String executionLine) {
+        def params = getParams(executionLine)
+        params[0] as int
+    }
+
+    Tuple2<Integer, Integer> getTwoIntParams(String executionLine) {
+        def params = getParams(executionLine)
+        new Tuple2<Integer, Integer>(params[0] as int, params[1] as int)
+    }
 }

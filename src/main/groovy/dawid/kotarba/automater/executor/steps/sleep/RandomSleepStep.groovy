@@ -6,8 +6,7 @@ import dawid.kotarba.automater.executor.StepType
 class RandomSleepStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
-        def params = getParams(executionLine)
-        def maxSleepTime = params[0] as int
+        def maxSleepTime = getIntParam(executionLine)
         sleep(new Random().nextInt(maxSleepTime))
     }
 
