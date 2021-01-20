@@ -3,12 +3,12 @@ package dawid.kotarba.automater.executor.steps
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
-class SleepStep extends AbstractStep {
+class RandomSleepStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def params = getParams(executionLine)
-        def sleepTime = params[0] as int
-        sleep(sleepTime)
+        def maxSleepTime = params[0] as int
+        sleep(new Random().nextInt(maxSleepTime))
     }
 
     @Override
@@ -18,6 +18,6 @@ class SleepStep extends AbstractStep {
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.of('of')
+        Optional.of('random')
     }
 }
