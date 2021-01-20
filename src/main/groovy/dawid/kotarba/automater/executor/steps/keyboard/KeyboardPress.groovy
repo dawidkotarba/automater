@@ -7,8 +7,8 @@ import dawid.kotarba.automater.executor.StepType
 class KeyboardPress extends AbstractStep {
     @Override
     void execute(String executionLine) {
-        def params = getParams(executionLine)
-        Keyboard.Button.getByChar(params[0]).ifPresent {
+        def param = getStringParam(getStringParam())
+        Keyboard.Button.getByChar(param).ifPresent {
             keyboard.press(it)
         }
     }
