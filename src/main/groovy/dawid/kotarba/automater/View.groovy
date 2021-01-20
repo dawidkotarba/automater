@@ -26,13 +26,13 @@ class View extends VerticalLayout {
         this.executor = executor
         this.parser = new PlanParser()
 
-        VerticalLayout todosList = new VerticalLayout() // (1)
+        VerticalLayout layout = new VerticalLayout()
         TextArea textArea = new TextArea()
         def testPlan = new ClassPathResource('plans/TestPlan.txt')
         def testPlanText = testPlan.getFile().readLines().stream().collect(Collectors.joining('\n'))
         textArea.setValue(testPlanText)
-
-        Button addButton = new Button("Execute") // (3)
+        textArea.setWidth("500px")
+        Button addButton = new Button("Execute")
         addButton.addClickShortcut(Key.ENTER)
         addButton.addClickListener({
             // TEST HERE
@@ -41,7 +41,7 @@ class View extends VerticalLayout {
         })
         add( // (5)
                 new H1("Automater"),
-                todosList,
+                layout,
                 new HorizontalLayout(
                         textArea,
                         addButton
