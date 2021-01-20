@@ -18,6 +18,15 @@ class PlanExecutor {
 
     void execute(Plan plan) {
         LOGGER.info("Executing plan: $plan.name")
+        executeSteps(plan)
+
+        def shallLoop = plan.executionLines.stream().anyMatch({ line -> line.contains(StepType.LOOP.name()) })
+        while (shallLoop) {
+            executeSteps(plan)
+        }
+    }
+
+    private executeSteps(Plan plan) {
         plan.executionLines.forEach { executionLine ->
             allSteps.steps.forEach { step ->
                 step.executeIfApplicable(executionLine)

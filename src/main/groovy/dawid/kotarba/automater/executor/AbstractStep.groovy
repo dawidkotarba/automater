@@ -9,7 +9,9 @@ abstract class AbstractStep implements Step {
     protected Keyboard keyboard = Beans.keyboard
 
     private shallExecute(String executionLine) {
-        return executionLine.startsWith(getStepType().name()) & executionLine.contains(getSupportedMethod())
+        return executionLine.startsWith(getStepType().name()) & executionLine.contains(getSupportedMethod().orElseGet({
+            return ''
+        }))
     }
 
     @Override
@@ -24,7 +26,9 @@ abstract class AbstractStep implements Step {
     List<String> getParams(String executionLine) {
         def parameters = executionLine.tokenize()
         parameters.remove(getStepType().name())
-        parameters.remove(getSupportedMethod())
+        getSupportedMethod().ifPresent({
+            parameters.remove(it)
+        })
         return parameters
     }
 }

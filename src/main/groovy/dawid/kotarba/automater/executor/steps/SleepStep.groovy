@@ -1,4 +1,4 @@
-package dawid.kotarba.automater.executor.impl
+package dawid.kotarba.automater.executor.steps
 
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
@@ -16,7 +16,7 @@ class SleepStep extends AbstractStep {
     }
 
     @Override
-    String getSupportedMethod() {
-        return ""
+    Optional<String> getSupportedMethod() {
+        return Optional.empty()
     }
 }

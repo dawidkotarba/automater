@@ -1,4 +1,4 @@
-package dawid.kotarba.automater.executor.impl
+package dawid.kotarba.automater.executor.steps
 
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
@@ -11,8 +11,8 @@ class MouseMoveToStep extends AbstractStep {
     }
 
     @Override
-    String getSupportedMethod() {
-        return "moveTo"
+    Optional<String> getSupportedMethod() {
+        return Optional.of('moveTo')
     }
 
     @Override
