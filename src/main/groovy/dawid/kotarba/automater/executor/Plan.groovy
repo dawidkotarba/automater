@@ -6,7 +6,17 @@ class Plan {
 
     Plan(String name) {
         this.name = name
-        executionLines = []
+        this.executionLines = []
+    }
+
+    Plan(String name, String executionPlan) {
+        this.name = name
+        this.executionLines = PlanParser.parseToExecutionLines(executionPlan)
+    }
+
+    Plan(String name, List<String> executionLines) {
+        this.name = name
+        this.executionLines = executionLines
     }
 
     void addExecutionLine(String executionLine) {
