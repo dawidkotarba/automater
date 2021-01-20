@@ -1,5 +1,7 @@
 package dawid.kotarba.automater.executor
 
+import dawid.kotarba.automater.Beans
+import dawid.kotarba.automater.device.Mouse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -11,6 +13,7 @@ class PlanExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final Steps allSteps
+    private final Mouse mouse = Beans.mouse
 
     PlanExecutor() {
         this.allSteps = new Steps()
@@ -29,7 +32,12 @@ class PlanExecutor {
     private executeSteps(Plan plan) {
         plan.executionLines.forEach { executionLine ->
             allSteps.steps.forEach { step ->
-                step.executeIfApplicable(executionLine)
+                def runWhenIdleMouse = plan.executionLines.stream().anyMatch({ line -> line.contains(StepType.MOUSE.name()) & line.contains('IDLE') })
+                if (runWhenIdleMouse && mouse.isMouseMoving()) {
+                    LOGGER.info("Mouse is moving, skipping $executionLine")
+                } else {
+                    step.executeIfApplicable(executionLine)
+                }
             }
         }
     }

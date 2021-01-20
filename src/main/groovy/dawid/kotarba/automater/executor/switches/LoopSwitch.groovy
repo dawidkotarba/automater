@@ -1,4 +1,4 @@
-package dawid.kotarba.automater.executor.steps
+package dawid.kotarba.automater.executor.switches
 
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory
 
 import java.lang.invoke.MethodHandles
 
-class LoopStep extends AbstractStep {
+class LoopSwitch extends AbstractStep {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     void execute(String executionLine) {
-        LOGGER.println("Found loop step...")
+        LOGGER.println("Found a LoopSwitch...")
     }
 
     @Override

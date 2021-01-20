@@ -1,6 +1,6 @@
 package dawid.kotarba.automater.executor
 
-import dawid.kotarba.automater.executor.steps.LoopStep
+import dawid.kotarba.automater.executor.switches.LoopSwitch
 import dawid.kotarba.automater.executor.steps.MouseMoveToStep
 import dawid.kotarba.automater.executor.steps.SleepStep
 
@@ -11,7 +11,7 @@ class Steps {
         steps = []
         steps.add(new MouseMoveToStep())
         steps.add(new SleepStep())
-        steps.add(new LoopStep())
+        steps.add(new LoopSwitch())
     }
 
     List<Step> getSteps() {
