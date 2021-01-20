@@ -18,11 +18,11 @@ class LoopSwitch extends AbstractStep {
 
     @Override
     StepType getStepType() {
-        return StepType.LOOP
+        StepType.LOOP
     }
 
     @Override
     Optional<String> getSupportedMethod() {
-        return Optional.empty()
+        Optional.empty()
     }
 }

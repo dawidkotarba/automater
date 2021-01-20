@@ -1,6 +1,7 @@
 package dawid.kotarba.automater.executor
 
 import dawid.kotarba.automater.Beans
+import dawid.kotarba.automater.Constants
 import dawid.kotarba.automater.device.Mouse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -23,8 +24,7 @@ class PlanExecutor {
         LOGGER.info("Executing plan: $plan.name")
         executeSteps(plan)
 
-        def shallLoop = plan.executionLines.stream().anyMatch({ line -> line.contains(StepType.LOOP.name()) })
-        while (shallLoop) {
+        while (shallLoopExecution(plan)) {
             executeSteps(plan)
         }
     }
@@ -32,13 +32,25 @@ class PlanExecutor {
     private executeSteps(Plan plan) {
         plan.executionLines.forEach { executionLine ->
             allSteps.steps.forEach { step ->
-                def runWhenIdleMouse = plan.executionLines.stream().anyMatch({ line -> line.contains(StepType.MOUSE.name()) & line.contains('IDLE') })
-                if (runWhenIdleMouse && mouse.isMouseMoving()) {
+                if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
                     LOGGER.info("Mouse is moving, skipping $executionLine")
-                } else {
+                } else if (!isExecutionLineCommented(executionLine)) {
                     step.executeIfApplicable(executionLine)
                 }
             }
         }
+    }
+
+    private static boolean shallLoopExecution(Plan plan) {
+        plan.executionLines.stream().anyMatch({ line -> !isExecutionLineCommented(line) & line.contains(StepType.LOOP.name()) })
+    }
+
+    private boolean shallSkipWhenMouseIsMoving(List<String> executionLines) {
+        def runWhenIdleMouse = executionLines.stream().anyMatch({ line -> line.contains(StepType.MOUSE.name()) & line.contains(Constants.MOUSE_IDLE) })
+        runWhenIdleMouse && mouse.isMouseMoving()
+    }
+
+    private static boolean isExecutionLineCommented(String executionLine) {
+        executionLine.startsWith(Constants.COMMENT_PREFIX)
     }
 }

@@ -1,5 +1,6 @@
 package dawid.kotarba.automater.executor.switches
 
+import dawid.kotarba.automater.Constants
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 import org.slf4j.Logger
@@ -18,11 +19,11 @@ class WhenMouseIdleSwitch extends AbstractStep {
 
     @Override
     StepType getStepType() {
-        return StepType.MOUSE
+        StepType.MOUSE
     }
 
     @Override
     Optional<String> getSupportedMethod() {
-        return Optional.of('IDLE')
+        Optional.of(Constants.MOUSE_IDLE)
     }
 }

@@ -12,11 +12,11 @@ class SleepStep extends AbstractStep {
 
     @Override
     StepType getStepType() {
-        return StepType.SLEEP
+        StepType.SLEEP
     }
 
     @Override
     Optional<String> getSupportedMethod() {
-        return Optional.empty()
+        Optional.empty()
     }
 }

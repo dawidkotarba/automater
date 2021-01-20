@@ -15,11 +15,11 @@ class KeyboardPress extends AbstractStep {
 
     @Override
     StepType getStepType() {
-        return StepType.KEYBOARD
+        StepType.KEYBOARD
     }
 
     @Override
     Optional<String> getSupportedMethod() {
-        return Optional.of('press')
+        Optional.of('press')
     }
 }

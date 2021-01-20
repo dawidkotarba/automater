@@ -3,7 +3,11 @@ package dawid.kotarba.automater.executor.steps
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
-class MouseMoveToStep extends AbstractStep {
+class MouseRightClick extends AbstractStep {
+    @Override
+    void execute(String executionLine) {
+        mouse.rightClick()
+    }
 
     @Override
     StepType getStepType() {
@@ -12,12 +16,6 @@ class MouseMoveToStep extends AbstractStep {
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.of('moveTo')
-    }
-
-    @Override
-    void execute(String executionLine) {
-        def params = getParams(executionLine)
-        mouse.moveTo(params.get(0) as int, params.get(1) as int)
+        Optional.of('rightClick')
     }
 }
