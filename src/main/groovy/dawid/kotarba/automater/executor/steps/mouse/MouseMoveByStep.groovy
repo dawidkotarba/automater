@@ -1,23 +1,22 @@
-package dawid.kotarba.automater.executor.steps
+package dawid.kotarba.automater.executor.steps.mouse
 
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
-class RandomSleepStep extends AbstractStep {
+class MouseMoveByStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def params = getParams(executionLine)
-        def maxSleepTime = params[0] as int
-        sleep(new Random().nextInt(maxSleepTime))
+        mouse.moveBy(params.get(0) as int, params.get(1) as int)
     }
 
     @Override
     StepType getStepType() {
-        StepType.SLEEP
+        StepType.MOUSE
     }
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.of('random')
+        Optional.of('moveBy')
     }
 }

@@ -1,12 +1,12 @@
-package dawid.kotarba.automater.executor.steps
+package dawid.kotarba.automater.executor.steps.mouse
 
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
-class MouseLeftClick extends AbstractStep {
+class MouseRightClick extends AbstractStep {
     @Override
     void execute(String executionLine) {
-        mouse.leftClick()
+        mouse.rightClick()
     }
 
     @Override
@@ -16,6 +16,6 @@ class MouseLeftClick extends AbstractStep {
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.of('leftClick')
+        Optional.of('rightClick')
     }
 }

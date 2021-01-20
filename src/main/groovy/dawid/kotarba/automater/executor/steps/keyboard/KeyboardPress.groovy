@@ -1,4 +1,4 @@
-package dawid.kotarba.automater.executor.steps
+package dawid.kotarba.automater.executor.steps.keyboard
 
 import dawid.kotarba.automater.device.Keyboard
 import dawid.kotarba.automater.executor.AbstractStep

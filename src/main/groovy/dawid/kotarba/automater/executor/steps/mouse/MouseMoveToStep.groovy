@@ -1,4 +1,4 @@
-package dawid.kotarba.automater.executor.steps
+package dawid.kotarba.automater.executor.steps.mouse
 
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType

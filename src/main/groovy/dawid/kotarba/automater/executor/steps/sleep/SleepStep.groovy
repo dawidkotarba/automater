@@ -1,21 +1,23 @@
-package dawid.kotarba.automater.executor.steps
+package dawid.kotarba.automater.executor.steps.sleep
 
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
-class MouseRightClick extends AbstractStep {
+class SleepStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
-        mouse.rightClick()
+        def params = getParams(executionLine)
+        def sleepTime = params[0] as int
+        sleep(sleepTime)
     }
 
     @Override
     StepType getStepType() {
-        StepType.MOUSE
+        StepType.SLEEP
     }
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.of('rightClick')
+        Optional.of('of')
     }
 }
