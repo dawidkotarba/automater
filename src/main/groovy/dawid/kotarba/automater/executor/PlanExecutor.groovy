@@ -13,12 +13,7 @@ import java.lang.invoke.MethodHandles
 class PlanExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final Steps allSteps
     private final Mouse mouse = Beans.mouse
-
-    PlanExecutor() {
-        this.allSteps = new Steps()
-    }
 
     void execute(Plan plan) {
         LOGGER.info("Executing plan: $plan.name")
@@ -31,7 +26,7 @@ class PlanExecutor {
 
     private executeSteps(Plan plan) {
         plan.executionLines.forEach { executionLine ->
-            allSteps.steps.forEach { step ->
+            Steps.steps.forEach { step ->
                 if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
                     LOGGER.info("Mouse is moving, skipping $executionLine")
                 } else if (!isExecutionLineCommented(executionLine)) {

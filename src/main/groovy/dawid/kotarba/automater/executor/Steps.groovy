@@ -14,8 +14,7 @@ import dawid.kotarba.automater.executor.switches.WhenMouseIdleSwitch
 
 class Steps {
     private static List<Step> steps = []
-
-    Steps() {
+    static {
         // switches
         steps.add(new LoopSwitch())
         steps.add(new WhenMouseIdleSwitch())
@@ -36,7 +35,7 @@ class Steps {
         steps.add(new RandomSleepStep())
     }
 
-    List<Step> getSteps() {
+    static List<Step> getSteps() {
         return steps
     }
 }
