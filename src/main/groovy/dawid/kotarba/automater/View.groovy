@@ -28,6 +28,10 @@ class View extends VerticalLayout {
     private Thread mouseLocationThread
     private Thread progressBarThread
 
+    def mouseCoords = new Label("Retrieving mouse coordinates...")
+    def progressBar = new ProgressBar()
+
+
     View() {
         def executor = Beans.planExecutor
         this.parser = new PlanParser()
@@ -60,20 +64,18 @@ class View extends VerticalLayout {
                 new H1("Automater"),
                 new HorizontalLayout(
                         planExecutionLayout,
+                ),
+                progressBar,
+                mouseCoords,
+                new HorizontalLayout(
                         startButton,
                         stopButton
-                )
+                ),
         )
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        def progressBar = new ProgressBar()
-        def mouseCoords = new Label("Retrieving mouse coordinates...")
-
-        add(progressBar)
-        add(mouseCoords)
-
         def eventUi = attachEvent.getUI()
         progressBarThread = new Thread(new ProgressBarRunnable(eventUi, progressBar))
         progressBarThread.start()
