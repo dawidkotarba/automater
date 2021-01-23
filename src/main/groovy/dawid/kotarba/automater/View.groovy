@@ -7,12 +7,12 @@ import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.Label
+import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.router.Route
-import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
 import dawid.kotarba.automater.executor.PlanParser
@@ -42,12 +42,18 @@ class View extends VerticalLayout {
         def testPlanText = testPlan.getFile().readLines().stream().collect(Collectors.joining('\n'))
         textArea.setValue(testPlanText)
         textArea.setWidth("500px")
-        Button addButton = new Button("Execute")
-        addButton.addClickShortcut(Key.ENTER)
-        addButton.addClickListener({
+        Button startButton = new Button("Start")
+        def stopButton = new Button("Stop [Esc]")
+        stopButton.addClickShortcut(Key.ESCAPE)
+        startButton.addClickListener({
             // TEST HERE
             def plan = new Plan("Plan from text area", textArea.getValue())
-            executor.execute(plan)
+            new Notification("Plan started", 3000).open()
+            executor.start(plan)
+        })
+        stopButton.addClickListener({
+            executor.stop()
+            new Notification("Execution stopped", 3000).open()
         })
         add( // (5)
                 new H1("Automater"),
@@ -55,7 +61,8 @@ class View extends VerticalLayout {
                 new HorizontalLayout(
                         label,
                         textArea,
-                        addButton
+                        startButton,
+                        stopButton
                 )
         )
     }

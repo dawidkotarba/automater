@@ -11,12 +11,14 @@ import java.lang.invoke.MethodHandles
 
 @Service
 class PlanExecutor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
     private final Mouse mouse = Beans.mouse
+    private boolean shallRun
 
-    void execute(Plan plan) {
+    void start(Plan plan) {
         LOGGER.info("Executing plan: $plan.name")
+        shallRun = true
         executeSteps(plan)
 
         while (shallLoopExecution(plan)) {
@@ -24,13 +26,19 @@ class PlanExecutor {
         }
     }
 
+    void stop() {
+        shallRun = false
+    }
+
     private executeSteps(Plan plan) {
         plan.executionLines.forEach { executionLine ->
             Steps.steps.forEach { step ->
-                if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
-                    LOGGER.info("Mouse is moving, skipping $executionLine")
-                } else if (!isExecutionLineCommented(executionLine)) {
-                    step.executeIfApplicable(executionLine)
+                if (shallRun) {
+                    if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
+                        LOGGER.info("Mouse is moving, skipping $executionLine")
+                    } else if (!isExecutionLineCommented(executionLine)) {
+                        step.executeIfApplicable(executionLine)
+                    }
                 }
             }
         }
