@@ -14,33 +14,51 @@ class PlanExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
     private final Mouse mouse = Beans.mouse
-    private boolean shallRun
+    private Plan currentPlan
+    private double planProgress
+    private boolean started
 
     void start(Plan plan) {
         LOGGER.info("Executing plan: $plan.name")
-        shallRun = true
+        currentPlan = plan
+        started = true
         executeSteps(plan)
 
         while (shallLoopExecution(plan)) {
             executeSteps(plan)
         }
+        stop()
     }
 
     void stop() {
-        shallRun = false
+        started = false
+    }
+
+    boolean isStarted() {
+        return started
+    }
+
+    Plan getCurrentPlan() {
+        return currentPlan
+    }
+
+    double getPlanProgress() {
+        return planProgress
     }
 
     private executeSteps(Plan plan) {
-        plan.executionLines.forEach { executionLine ->
+        planProgress = 0
+        for (int i = 0; i < plan.executionLines.size(); i++) {
             Steps.steps.forEach { step ->
-                if (shallRun) {
+                if (this.started) {
                     if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
-                        LOGGER.info("Mouse is moving, skipping $executionLine")
-                    } else if (!isExecutionLineCommented(executionLine)) {
-                        step.executeIfApplicable(executionLine)
+                        LOGGER.info("Mouse is moving, skipping ${plan.executionLines[i]}")
+                    } else if (!isExecutionLineCommented(plan.executionLines[i])) {
+                        step.executeIfApplicable(plan.executionLines[i])
                     }
                 }
             }
+            planProgress = (i + 1) / plan.getExecutionLines().size() as double
         }
     }
 
