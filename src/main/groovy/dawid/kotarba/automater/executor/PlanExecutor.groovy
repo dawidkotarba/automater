@@ -24,7 +24,7 @@ class PlanExecutor {
         started = true
         executeSteps(plan)
 
-        while (shallLoopExecution(plan)) {
+        while (started & shallLoopExecution(plan)) {
             executeSteps(plan)
         }
         stop()
