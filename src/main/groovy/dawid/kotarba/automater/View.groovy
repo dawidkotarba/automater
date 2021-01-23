@@ -34,20 +34,17 @@ class View extends VerticalLayout {
         this.executor = executor
         this.parser = new PlanParser()
 
-        VerticalLayout layout = new VerticalLayout()
-        Label label = new Label()
-        label.text = 'Ala ma kota'
-        TextArea textArea = new TextArea()
+        def layout = new VerticalLayout()
+        def planExecutionArea = new TextArea()
         def testPlan = new ClassPathResource('plans/TestPlan.txt')
         def testPlanText = testPlan.getFile().readLines().stream().collect(Collectors.joining('\n'))
-        textArea.setValue(testPlanText)
-        textArea.setWidth("500px")
-        Button startButton = new Button("Start")
+        planExecutionArea.setValue(testPlanText)
+        planExecutionArea.setWidth("500px")
+        def startButton = new Button("Start")
         def stopButton = new Button("Stop [Esc]")
         stopButton.addClickShortcut(Key.ESCAPE)
         startButton.addClickListener({
-            // TEST HERE
-            def plan = new Plan("Plan from text area", textArea.getValue())
+            def plan = new Plan("Plan from text area", planExecutionArea.getValue())
             new Notification("Plan started", 3000).open()
             executor.start(plan)
         })
@@ -55,12 +52,11 @@ class View extends VerticalLayout {
             executor.stop()
             new Notification("Execution stopped", 3000).open()
         })
-        add( // (5)
+        add(
                 new H1("Automater"),
                 layout,
                 new HorizontalLayout(
-                        label,
-                        textArea,
+                        planExecutionArea,
                         startButton,
                         stopButton
                 )
