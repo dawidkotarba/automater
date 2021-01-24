@@ -107,7 +107,7 @@ class View extends VerticalLayout {
         void run() {
             def executor = Beans.planExecutor
             while (true) {
-                sleep(10)
+                sleep(300)
                 ui.access {
                     progressBar.value = executor.planProgress
                 }
@@ -128,7 +128,7 @@ class View extends VerticalLayout {
         void run() {
             def mouse = Beans.mouse
             while (true) {
-                sleep(10)
+                sleep(300)
                 ui.access {
                     mouseCoords.text = "Mouse coordinates [ X: ${mouse.x}, Y: ${mouse.y} ]"
                 }
