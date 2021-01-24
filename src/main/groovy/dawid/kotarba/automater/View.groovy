@@ -7,6 +7,8 @@ import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.Label
+import com.vaadin.flow.component.icon.Icon
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -24,7 +26,6 @@ import java.util.stream.Collectors
 @Push
 class View extends VerticalLayout {
 
-    private final PlanParser parser
     private Thread mouseLocationThread
     private Thread progressBarThread
 
@@ -34,7 +35,6 @@ class View extends VerticalLayout {
 
     View() {
         def executor = Beans.planExecutor
-        this.parser = new PlanParser()
 
         def planExecutionLayout = new VerticalLayout()
         def planExecutionArea = new TextArea()
@@ -44,8 +44,8 @@ class View extends VerticalLayout {
         planExecutionArea.setWidth("500px")
         planExecutionLayout.add(planExecutionArea)
 
-        def startButton = new Button("Start")
-        def stopButton = new Button("Stop")
+        def startButton = new Button("Start", new Icon(VaadinIcon.PLAY))
+        def stopButton = new Button("Stop", new Icon(VaadinIcon.STOP))
         stopButton.addClickShortcut(Key.ESCAPE)
         startButton.addClickListener({
             new Thread(new Runnable() {
@@ -62,7 +62,8 @@ class View extends VerticalLayout {
         })
         add(
                 new H1("Automater"),
-                new HorizontalLayout(
+                new VerticalLayout(
+                        new Label("Execute a Plan:"),
                         planExecutionLayout,
                 ),
                 progressBar,
