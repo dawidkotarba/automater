@@ -5,6 +5,7 @@ SLEEP random 200
 MOUSE moveTo 300 300
 MOUSE leftClick
 # KEYBOARD press a
+# KEYBOARD type typing...
 SLEEP of 100
 MOUSE moveTo 500 500
 SLEEP of 100

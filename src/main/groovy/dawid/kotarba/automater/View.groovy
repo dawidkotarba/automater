@@ -38,7 +38,7 @@ class View extends VerticalLayout {
 
         def planExecutionLayout = new VerticalLayout()
         def planExecutionArea = new TextArea()
-        def testPlan = new ClassPathResource('plans/TestPlan.txt')
+        def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
         def testPlanText = testPlan.getFile().readLines().stream().collect(Collectors.joining('\n'))
         planExecutionArea.setValue(testPlanText)
         planExecutionArea.setWidth("500px")

@@ -1,16 +1,14 @@
 package dawid.kotarba.automater.executor.steps.keyboard
 
-import dawid.kotarba.automater.device.Keyboard
+
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
-class KeyboardRelease extends AbstractStep {
+class KeyboardType extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def param = getStringParam(executionLine)
-        Keyboard.Button.getByChar(param).ifPresent {
-            keyboard.release(it)
-        }
+        keyboard.type(param)
     }
 
     @Override
@@ -20,6 +18,6 @@ class KeyboardRelease extends AbstractStep {
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.of('release')
+        Optional.of('type')
     }
 }
