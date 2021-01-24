@@ -16,15 +16,17 @@ class PlanExecutor {
     private final Mouse mouse = Beans.mouse
     private Plan currentPlan
     private double planProgress
+    private boolean loopExecution
     private boolean started
 
     void start(Plan plan) {
         LOGGER.info("Executing plan: $plan.name")
         currentPlan = plan
         started = true
+        loopExecution = shallLoopExecution(plan)
         executeSteps(plan)
 
-        while (started & shallLoopExecution(plan)) {
+        while (started & loopExecution) {
             executeSteps(plan)
         }
         stop()
@@ -32,6 +34,7 @@ class PlanExecutor {
 
     void stop() {
         started = false
+        loopExecution = false
     }
 
     boolean isStarted() {
@@ -44,6 +47,10 @@ class PlanExecutor {
 
     double getPlanProgress() {
         return planProgress
+    }
+
+    boolean getLoopPlan() {
+        return loopExecution
     }
 
     private executeSteps(Plan plan) {

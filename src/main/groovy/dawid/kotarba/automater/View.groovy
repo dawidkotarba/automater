@@ -17,7 +17,6 @@ import com.vaadin.flow.component.progressbar.ProgressBar
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.router.Route
 import dawid.kotarba.automater.executor.Plan
-import dawid.kotarba.automater.executor.PlanParser
 import org.springframework.core.io.ClassPathResource
 
 import java.util.stream.Collectors
@@ -109,7 +108,14 @@ class View extends VerticalLayout {
             while (true) {
                 sleep(300)
                 ui.access {
-                    progressBar.value = executor.planProgress
+                    if (!executor.isStarted()) {
+                        progressBar.indeterminate = false
+                        progressBar.value = 1
+                    } else if (executor.loopPlan) {
+                        progressBar.indeterminate = true
+                    } else {
+                        progressBar.value = executor.planProgress
+                    }
                 }
             }
         }
