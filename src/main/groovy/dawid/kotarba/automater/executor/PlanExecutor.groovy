@@ -79,6 +79,6 @@ class PlanExecutor {
     }
 
     private static boolean isExecutionLineCommented(String executionLine) {
-        executionLine.startsWith(Constants.COMMENT_PREFIX)
+        executionLine.trim().startsWith(Constants.COMMENT_PREFIX)
     }
 }
