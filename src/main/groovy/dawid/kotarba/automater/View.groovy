@@ -32,6 +32,7 @@ class View extends VerticalLayout {
     def mouseCoords = new Label("Retrieving mouse coordinates...")
     def progressBar = new ProgressBar()
     def startButton = new Button("Start", new Icon(VaadinIcon.PLAY))
+    def stopButton = new Button("Stop", new Icon(VaadinIcon.STOP))
 
     View() {
         def executor = Beans.planExecutor
@@ -44,7 +45,6 @@ class View extends VerticalLayout {
         planExecutionArea.setWidth("500px")
         planExecutionLayout.add(planExecutionArea)
 
-        def stopButton = new Button("Stop", new Icon(VaadinIcon.STOP))
         stopButton.addClickShortcut(Key.ESCAPE)
         startButton.addClickListener({
             new Thread(new Runnable() {
@@ -76,7 +76,7 @@ class View extends VerticalLayout {
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        componentsThread = new Thread(new ComponentsRunnable(attachEvent.getUI(), progressBar, mouseCoords, startButton))
+        componentsThread = new Thread(new ComponentsRunnable(attachEvent.getUI(), progressBar, mouseCoords, startButton, stopButton))
         componentsThread.start()
     }
 
@@ -91,12 +91,14 @@ class View extends VerticalLayout {
         private final ProgressBar progressBar
         private final Label mouseCoords
         private final Button startButton
+        private final Button stopButton
 
-        ComponentsRunnable(UI ui, ProgressBar progressBar, Label mouseCoords, Button startButton) {
+        ComponentsRunnable(UI ui, ProgressBar progressBar, Label mouseCoords, Button startButton, Button stopButton) {
             this.ui = ui
             this.progressBar = progressBar
             this.mouseCoords = mouseCoords
             this.startButton = startButton
+            this.stopButton = stopButton
         }
 
         @Override
@@ -109,6 +111,7 @@ class View extends VerticalLayout {
                     updateMouseCoordinates(mouse)
                     updateProgressBar(executor)
                     updateStartButton(executor)
+                    updateStopButton(executor)
                 }
             }
         }
@@ -118,11 +121,11 @@ class View extends VerticalLayout {
         }
 
         private void updateStartButton(PlanExecutor executor) {
-            if (executor.isStarted()) {
-                startButton.enabled = false
-            } else {
-                startButton.enabled = true
-            }
+            startButton.enabled = !executor.isStarted()
+        }
+
+        private void updateStopButton(PlanExecutor executor) {
+            stopButton.enabled = executor.isStarted()
         }
 
         private void updateProgressBar(PlanExecutor executor) {
