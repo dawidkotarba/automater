@@ -64,7 +64,7 @@ class PlanExecutor {
     }
 
     private static boolean shallLoopExecution(Plan plan) {
-        plan.executionLines.stream().anyMatch({ line -> !isExecutionLineCommented(line) & line.contains(StepType.LOOP.name()) })
+        plan.executionLines.stream().anyMatch({ line -> !isExecutionLineCommented(line) & line.trim() == StepType.LOOP.name() })
     }
 
     private boolean shallSkipWhenMouseIsMoving(List<String> executionLines) {
