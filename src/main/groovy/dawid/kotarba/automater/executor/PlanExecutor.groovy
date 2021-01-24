@@ -14,14 +14,12 @@ class PlanExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
     private final Mouse mouse = Beans.mouse
-    private Plan currentPlan
     private double planProgress
     private boolean loopExecution
     private boolean started
 
     void start(Plan plan) {
         LOGGER.info("Executing plan: $plan.name")
-        currentPlan = plan
         started = true
         loopExecution = shallLoopExecution(plan)
         executeSteps(plan)
@@ -39,10 +37,6 @@ class PlanExecutor {
 
     boolean isStarted() {
         return started
-    }
-
-    Plan getCurrentPlan() {
-        return currentPlan
     }
 
     double getPlanProgress() {
