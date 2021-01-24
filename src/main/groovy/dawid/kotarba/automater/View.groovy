@@ -16,7 +16,9 @@ import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.component.progressbar.ProgressBar
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.router.Route
+import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
+import dawid.kotarba.automater.executor.PlanExecutor
 import org.springframework.core.io.ClassPathResource
 
 import java.util.stream.Collectors
@@ -25,12 +27,11 @@ import java.util.stream.Collectors
 @Push
 class View extends VerticalLayout {
 
-    private Thread mouseLocationThread
-    private Thread progressBarThread
+    private Thread componentsThread
 
     def mouseCoords = new Label("Retrieving mouse coordinates...")
     def progressBar = new ProgressBar()
-
+    def startButton = new Button("Start", new Icon(VaadinIcon.PLAY))
 
     View() {
         def executor = Beans.planExecutor
@@ -43,7 +44,6 @@ class View extends VerticalLayout {
         planExecutionArea.setWidth("500px")
         planExecutionLayout.add(planExecutionArea)
 
-        def startButton = new Button("Start", new Icon(VaadinIcon.PLAY))
         def stopButton = new Button("Stop", new Icon(VaadinIcon.STOP))
         stopButton.addClickShortcut(Key.ESCAPE)
         startButton.addClickListener({
@@ -76,68 +76,63 @@ class View extends VerticalLayout {
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        def eventUi = attachEvent.getUI()
-        progressBarThread = new Thread(new ProgressBarRunnable(eventUi, progressBar))
-        progressBarThread.start()
-
-        mouseLocationThread = new Thread(new MouseLocationRunnable(eventUi, mouseCoords))
-        mouseLocationThread.start()
+        componentsThread = new Thread(new ComponentsRunnable(attachEvent.getUI(), progressBar, mouseCoords, startButton))
+        componentsThread.start()
     }
 
     @Override
     protected void onDetach(DetachEvent detachEvent) {
-        progressBarThread.interrupt()
-        progressBarThread = null
-
-        mouseLocationThread.interrupt()
-        mouseLocationThread = null
+        componentsThread.interrupt()
+        componentsThread = null
     }
 
-    private static class ProgressBarRunnable implements Runnable {
+    private static class ComponentsRunnable implements Runnable {
         private final UI ui
-        private ProgressBar progressBar
+        private final ProgressBar progressBar
+        private final Label mouseCoords
+        private final Button startButton
 
-        ProgressBarRunnable(UI ui, ProgressBar progressBar) {
+        ComponentsRunnable(UI ui, ProgressBar progressBar, Label mouseCoords, Button startButton) {
             this.ui = ui
             this.progressBar = progressBar
-        }
-
-        @Override
-        void run() {
-            def executor = Beans.planExecutor
-            while (true) {
-                sleep(300)
-                ui.access {
-                    if (!executor.isStarted()) {
-                        progressBar.indeterminate = false
-                        progressBar.value = 1
-                    } else if (executor.loopPlan) {
-                        progressBar.indeterminate = true
-                    } else {
-                        progressBar.value = executor.planProgress
-                    }
-                }
-            }
-        }
-    }
-
-    private static class MouseLocationRunnable implements Runnable {
-        private final UI ui
-        private final Label mouseCoords
-
-        MouseLocationRunnable(UI ui, Label mouseCoords) {
-            this.ui = ui
             this.mouseCoords = mouseCoords
+            this.startButton = startButton
         }
 
         @Override
         void run() {
             def mouse = Beans.mouse
+            def executor = Beans.planExecutor
             while (true) {
-                sleep(300)
+                sleep(200)
                 ui.access {
-                    mouseCoords.text = "Mouse coordinates [ X: ${mouse.x}, Y: ${mouse.y} ]"
+                    updateMouseCoordinates(mouse)
+                    updateProgressBar(executor)
+                    updateStartButton(executor)
                 }
+            }
+        }
+
+        private void updateMouseCoordinates(Mouse mouse) {
+            mouseCoords.text = "Mouse coordinates [ X: ${mouse.x}, Y: ${mouse.y} ]"
+        }
+
+        private void updateStartButton(PlanExecutor executor) {
+            if (executor.isStarted()) {
+                startButton.enabled = false
+            } else {
+                startButton.enabled = true
+            }
+        }
+
+        private void updateProgressBar(PlanExecutor executor) {
+            if (!executor.isStarted()) {
+                progressBar.indeterminate = false
+                progressBar.value = 1
+            } else if (executor.loopPlan) {
+                progressBar.indeterminate = true
+            } else {
+                progressBar.value = executor.planProgress
             }
         }
     }
