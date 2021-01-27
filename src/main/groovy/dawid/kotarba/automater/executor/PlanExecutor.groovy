@@ -19,7 +19,6 @@ class PlanExecutor {
     private boolean started
 
     void start(Plan plan) {
-        LOGGER.info("Executing plan: $plan.name")
         started = true
         loopExecution = shallLoopExecution(plan)
         executeSteps(plan)
@@ -58,6 +57,9 @@ class PlanExecutor {
                         step.executeIfApplicable(plan.executionLines[i])
                     }
                 }
+            }
+            if (!isExecutionLineCommented(plan.executionLines[i])) {
+                sleep(plan.sleepBetweenSteps)
             }
             planProgress = (i + 1) / plan.getExecutionLines().size() as double
         }

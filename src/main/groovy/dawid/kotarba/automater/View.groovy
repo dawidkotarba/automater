@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.component.progressbar.ProgressBar
 import com.vaadin.flow.component.textfield.TextArea
+import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.Route
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
@@ -32,6 +33,7 @@ class View extends VerticalLayout {
 
     private Thread componentsThread
 
+    def sleepBetweenStepsField = new TextField("Sleep time between steps")
     def mouseCoords = new Label()
     def progressBar = new ProgressBar()
     def startButton = new Button("Start", new Icon(PLAY))
@@ -47,21 +49,22 @@ class View extends VerticalLayout {
 
         def executor = Beans.planExecutor
 
-        def planExecutionArea = new TextArea()
+        def planExecutionArea = new TextArea("Execute a Plan:")
         planExecutionArea.className = "planExecutionArea"
         def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
         def testPlanText = getTestPlanExecutionLines(testPlan)
         planExecutionArea.value = testPlanText
+
+        sleepBetweenStepsField.value = "100"
 
         updateStartButton(planExecutionArea, executor)
         updateStopButton(executor)
         updateMouseCoordsButton()
 
         def planExecutionLayout = new VerticalLayout(
-                new Label("Execute a Plan:"),
                 planExecutionArea,
+                sleepBetweenStepsField
         )
-        planExecutionLayout.alignItems = Alignment.CENTER
 
         pageLayout.add(
                 new H1("Automater"),
@@ -99,7 +102,7 @@ class View extends VerticalLayout {
             new Thread(new Runnable() {
                 @Override
                 void run() {
-                    def plan = new Plan("Plan from text area", planExecutionArea.value)
+                    def plan = new Plan(planExecutionArea.value, Integer.parseInt(sleepBetweenStepsField.value))
                     executor.start(plan)
                 }
             }).start()

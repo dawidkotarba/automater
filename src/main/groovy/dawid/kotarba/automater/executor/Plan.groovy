@@ -1,33 +1,37 @@
 package dawid.kotarba.automater.executor
 
 class Plan {
-    private String name
+    private static final int DEFAULT_SLEEP_BETWEEN_STEPS = 100
+    private int sleepBetweenSteps
     private List<String> executionLines
 
-    Plan(String name) {
-        this.name = name
-        this.executionLines = []
+    Plan() {
+        this(DEFAULT_SLEEP_BETWEEN_STEPS)
     }
 
-    Plan(String name, String executionPlan) {
-        this.name = name
+    Plan(int sleepBetweenSteps) {
+        this([], DEFAULT_SLEEP_BETWEEN_STEPS)
+    }
+
+    Plan(String executionPlan, int sleepBetweenSteps) {
         this.executionLines = PlanParser.parseToExecutionLines(executionPlan)
+        this.sleepBetweenSteps = sleepBetweenSteps
     }
 
-    Plan(String name, List<String> executionLines) {
-        this.name = name
+    Plan(List<String> executionLines, int sleepBetweenSteps) {
         this.executionLines = executionLines
+        this.sleepBetweenSteps = sleepBetweenSteps
     }
 
     void addExecutionLine(String executionLine) {
         executionLines.add(executionLine)
     }
 
-    String getName() {
-        return name
-    }
-
     List<String> getExecutionLines() {
         return executionLines
+    }
+
+    int getSleepBetweenSteps() {
+        return sleepBetweenSteps
     }
 }
