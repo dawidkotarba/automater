@@ -10,6 +10,7 @@ import dawid.kotarba.automater.executor.steps.mouse.MouseMoveByStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveToPercentStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveToStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseRightClick
+import dawid.kotarba.automater.executor.steps.mouse.MouseScrollStep
 import dawid.kotarba.automater.executor.steps.sleep.RandomSleepStep
 import dawid.kotarba.automater.executor.steps.sleep.SleepStep
 import dawid.kotarba.automater.executor.switches.LoopSwitch
@@ -35,6 +36,7 @@ class Steps {
         steps.add(new MouseRightClick())
         steps.add(new MouseMoveToPercentStep())
         steps.add(new MouseMoveByPercentStep())
+        steps.add(new MouseScrollStep())
 
         // sleep
         steps.add(new SleepStep())

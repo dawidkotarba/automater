@@ -14,3 +14,5 @@ SLEEP of 100
 MOUSE rightClick
 SLEEP of 100
 MOUSE leftClick
+MOUSE scroll 200
+MOUSE scroll -200
