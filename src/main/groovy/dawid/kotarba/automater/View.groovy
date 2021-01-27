@@ -29,54 +29,56 @@ class View extends VerticalLayout {
 
     private Thread componentsThread
 
-    def mouseCoords = new Label("Retrieving mouse coordinates...")
+    def mouseCoords = new Label()
     def progressBar = new ProgressBar()
     def startButton = new Button("Start", new Icon(VaadinIcon.PLAY))
     def stopButton = new Button("Stop", new Icon(VaadinIcon.STOP))
+    def mouseCoordsButton = new Button("Capture mouse coords", new Icon(VaadinIcon.CURSOR))
+    def shallCaptureMouseCoordinates = false
 
     View() {
+        alignItems = Alignment.CENTER
+
+        def pageLayout = new VerticalLayout()
+        pageLayout.alignItems = Alignment.CENTER
+        pageLayout.width = "500px"
+
         def executor = Beans.planExecutor
 
-        def planExecutionLayout = new VerticalLayout()
         def planExecutionArea = new TextArea()
         def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
-        def testPlanText = testPlan.getFile().readLines().stream().collect(Collectors.joining('\n'))
-        planExecutionArea.setValue(testPlanText)
-        planExecutionArea.setWidth("500px")
-        planExecutionLayout.add(planExecutionArea)
+        def testPlanText = testPlan.file.readLines().stream().collect(Collectors.joining('\n'))
+        planExecutionArea.value = testPlanText
+        planExecutionArea.width = "500px"
 
-        stopButton.addClickShortcut(Key.ESCAPE)
-        startButton.addClickListener({
-            new Thread(new Runnable() {
-                @Override
-                void run() {
-                    def plan = new Plan("Plan from text area", planExecutionArea.getValue())
-                    executor.start(plan)
-                }
-            }).start()
-        })
-        stopButton.addClickListener({
-            executor.stop()
-            new Notification("Execution stopped", 3000).open()
-        })
-        add(
+        updateStartButton(planExecutionArea.value, executor)
+        updateStopButton(executor)
+        updateMouseCoordsButton()
+
+        def planExecutionLayout = new VerticalLayout(
+                new Label("Execute a Plan:"),
+                planExecutionArea,
+        )
+        planExecutionLayout.alignItems = Alignment.CENTER
+
+        pageLayout.add(
                 new H1("Automater"),
-                new VerticalLayout(
-                        new Label("Execute a Plan:"),
-                        planExecutionLayout,
-                ),
+                planExecutionLayout,
                 progressBar,
                 mouseCoords,
                 new HorizontalLayout(
                         startButton,
-                        stopButton
+                        stopButton,
+                        mouseCoordsButton
                 ),
         )
+
+        add(pageLayout)
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        componentsThread = new Thread(new ComponentsRunnable(attachEvent.getUI(), progressBar, mouseCoords, startButton, stopButton))
+        componentsThread = new Thread(new ComponentsRunnable(attachEvent.UI))
         componentsThread.start()
     }
 
@@ -86,19 +88,37 @@ class View extends VerticalLayout {
         componentsThread = null
     }
 
-    private static class ComponentsRunnable implements Runnable {
-        private final UI ui
-        private final ProgressBar progressBar
-        private final Label mouseCoords
-        private final Button startButton
-        private final Button stopButton
+    private updateStartButton(String executionLines, PlanExecutor executor) {
+        startButton.addClickListener({
+            new Thread(new Runnable() {
+                @Override
+                void run() {
+                    def plan = new Plan("Plan from text area", executionLines)
+                    executor.start(plan)
+                }
+            }).start()
+        })
+    }
 
-        ComponentsRunnable(UI ui, ProgressBar progressBar, Label mouseCoords, Button startButton, Button stopButton) {
+    private updateStopButton(PlanExecutor executor) {
+        stopButton.addClickShortcut(Key.ESCAPE)
+        stopButton.addClickListener({
+            executor.stop()
+            new Notification("Execution stopped", 3000).open()
+        })
+    }
+
+    private updateMouseCoordsButton() {
+        mouseCoordsButton.addClickListener({
+            shallCaptureMouseCoordinates = !shallCaptureMouseCoordinates
+        })
+    }
+
+    private class ComponentsRunnable implements Runnable {
+        private final UI ui
+
+        ComponentsRunnable(UI ui) {
             this.ui = ui
-            this.progressBar = progressBar
-            this.mouseCoords = mouseCoords
-            this.startButton = startButton
-            this.stopButton = stopButton
         }
 
         @Override
@@ -117,19 +137,23 @@ class View extends VerticalLayout {
         }
 
         private void updateMouseCoordinates(Mouse mouse) {
-            mouseCoords.text = "Mouse coordinates [ X: ${mouse.x}, Y: ${mouse.y} ]"
+            if (shallCaptureMouseCoordinates) {
+                mouseCoords.text = "Mouse coordinates [ X: ${mouse.x}, Y: ${mouse.y} ]"
+            } else {
+                mouseCoords.text = ""
+            }
         }
 
         private void updateStartButton(PlanExecutor executor) {
-            startButton.enabled = !executor.isStarted()
+            startButton.enabled = !executor.started
         }
 
         private void updateStopButton(PlanExecutor executor) {
-            stopButton.enabled = executor.isStarted()
+            stopButton.enabled = executor.started
         }
 
         private void updateProgressBar(PlanExecutor executor) {
-            if (!executor.isStarted()) {
+            if (!executor.started) {
                 progressBar.indeterminate = false
                 progressBar.value = 1
             } else if (executor.loopPlan) {
