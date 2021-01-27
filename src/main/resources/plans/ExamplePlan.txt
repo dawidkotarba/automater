@@ -6,13 +6,10 @@ MOUSE moveTo 300 300
 MOUSE leftClick
 # KEYBOARD press a
 # KEYBOARD type typing...
-SLEEP of 100
 MOUSE moveTo 500 500
-SLEEP of 100
 MOUSE moveTo 800 800
-SLEEP of 100
 MOUSE rightClick
-SLEEP of 100
 MOUSE leftClick
 MOUSE scroll 1
 MOUSE scroll -1
+SLEEP of 500
