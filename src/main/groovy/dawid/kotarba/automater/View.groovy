@@ -5,6 +5,7 @@ import com.vaadin.flow.component.DetachEvent
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.icon.Icon
@@ -25,6 +26,7 @@ import java.util.stream.Collectors
 
 @Route
 @Push
+@CssImport('./styles/styles.css')
 class View extends VerticalLayout {
 
     private Thread componentsThread
@@ -38,18 +40,17 @@ class View extends VerticalLayout {
 
     View() {
         alignItems = Alignment.CENTER
-
         def pageLayout = new VerticalLayout()
+        pageLayout.className = "page"
         pageLayout.alignItems = Alignment.CENTER
-        pageLayout.width = "500px"
 
         def executor = Beans.planExecutor
 
         def planExecutionArea = new TextArea()
+        planExecutionArea.className = "planExecutionArea"
         def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
         def testPlanText = testPlan.file.readLines().stream().collect(Collectors.joining('\n'))
         planExecutionArea.value = testPlanText
-        planExecutionArea.width = "500px"
 
         updateStartButton(planExecutionArea.value, executor)
         updateStopButton(executor)
