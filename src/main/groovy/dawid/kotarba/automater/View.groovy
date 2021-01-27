@@ -49,10 +49,10 @@ class View extends VerticalLayout {
         def planExecutionArea = new TextArea()
         planExecutionArea.className = "planExecutionArea"
         def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
-        def testPlanText = testPlan.file.readLines().stream().collect(Collectors.joining('\n'))
+        def testPlanText = getTestPlanExecutionLines(testPlan)
         planExecutionArea.value = testPlanText
 
-        updateStartButton(planExecutionArea.value, executor)
+        updateStartButton(planExecutionArea, executor)
         updateStopButton(executor)
         updateMouseCoordsButton()
 
@@ -77,6 +77,10 @@ class View extends VerticalLayout {
         add(pageLayout)
     }
 
+    private String getTestPlanExecutionLines(ClassPathResource testPlan) {
+        testPlan.file.readLines().stream().collect(Collectors.joining('\n'))
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         componentsThread = new Thread(new ComponentsRunnable(attachEvent.UI))
@@ -89,12 +93,12 @@ class View extends VerticalLayout {
         componentsThread = null
     }
 
-    private updateStartButton(String executionLines, PlanExecutor executor) {
+    private updateStartButton(TextArea planExecutionArea, PlanExecutor executor) {
         startButton.addClickListener({
             new Thread(new Runnable() {
                 @Override
                 void run() {
-                    def plan = new Plan("Plan from text area", executionLines)
+                    def plan = new Plan("Plan from text area", planExecutionArea.value)
                     executor.start(plan)
                 }
             }).start()
