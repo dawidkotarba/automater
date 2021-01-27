@@ -33,7 +33,7 @@ class View extends VerticalLayout {
 
     private Thread componentsThread
 
-    def sleepBetweenStepsField = new TextField("Sleep time between steps")
+    def sleepBetweenStepsField = new TextField("Sleep time between steps:")
     def mouseCoords = new Label()
     def progressBar = new ProgressBar()
     def startButton = new Button("Start", new Icon(PLAY))
