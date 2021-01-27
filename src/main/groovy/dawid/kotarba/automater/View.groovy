@@ -24,6 +24,8 @@ import org.springframework.core.io.ClassPathResource
 
 import java.util.stream.Collectors
 
+import static com.vaadin.flow.component.icon.VaadinIcon.*
+
 @Route
 @Push
 @CssImport('./styles/styles.css')
@@ -33,9 +35,9 @@ class View extends VerticalLayout {
 
     def mouseCoords = new Label()
     def progressBar = new ProgressBar()
-    def startButton = new Button("Start", new Icon(VaadinIcon.PLAY))
-    def stopButton = new Button("Stop", new Icon(VaadinIcon.STOP))
-    def mouseCoordsButton = new Button("Capture mouse coords", new Icon(VaadinIcon.CURSOR))
+    def startButton = new Button("Start", new Icon(PLAY))
+    def stopButton = new Button("Stop [Esc]", new Icon(STOP))
+    def mouseCoordsButton = new Button("Capture mouse coords", new Icon(CURSOR))
     def shallCaptureMouseCoordinates = false
 
     View() {
