@@ -1,12 +1,12 @@
-body {
-    background-color: #f2f2f2;
-}
-
 .page {
     background-color: white;
-    width: 560px !important;
+    width: 900px !important;
 }
 
 .planExecutionArea {
-    width: 500px;
+    width: 850px;
+}
+
+.lineExampleLabel {
+    font-style: italic;
 }

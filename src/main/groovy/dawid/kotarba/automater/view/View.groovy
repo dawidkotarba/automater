@@ -1,9 +1,11 @@
-package dawid.kotarba.automater
+package dawid.kotarba.automater.view
 
 import com.vaadin.flow.component.AttachEvent
+import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.DetachEvent
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.accordion.Accordion
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H1
@@ -17,6 +19,7 @@ import com.vaadin.flow.component.progressbar.ProgressBar
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.Route
+import dawid.kotarba.automater.Beans
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
@@ -33,6 +36,7 @@ class View extends VerticalLayout {
 
     private Thread componentsThread
 
+    def planExecutionArea = new TextArea("Execute a Plan:")
     def sleepBetweenStepsField = new TextField("Sleep time between steps:")
     def mouseCoords = new Label()
     def progressBar = new ProgressBar()
@@ -49,7 +53,6 @@ class View extends VerticalLayout {
 
         def executor = Beans.planExecutor
 
-        def planExecutionArea = new TextArea("Execute a Plan:")
         planExecutionArea.className = "planExecutionArea"
         def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
         def testPlanText = getTestPlanExecutionLines(testPlan)
@@ -76,6 +79,7 @@ class View extends VerticalLayout {
                         stopButton,
                         mouseCoordsButton
                 ),
+                getStepsDocumentation()
         )
 
         add(pageLayout)
@@ -171,5 +175,25 @@ class View extends VerticalLayout {
                 progressBar.value = executor.planProgress
             }
         }
+    }
+
+    private Component getStepsDocumentation() {
+        Accordion accordion = new Accordion()
+        def documentation = new StepsDocumentation()
+
+        def layout = new VerticalLayout()
+        documentation.descriptions.values().toList().forEach({ description ->
+            def addToPlanButton = new Button("Add")
+            addToPlanButton.addClickListener({
+                planExecutionArea.value = "${planExecutionArea.value}\n${description.lineExample}"
+            })
+
+            def lineExampleLabel = new Label("${description.lineExample}: ")
+            lineExampleLabel.className = 'lineExampleLabel'
+            def usageLabel = new Label("${description.usage}")
+            def labels = new HorizontalLayout(addToPlanButton, lineExampleLabel, usageLabel)
+            layout.add(labels)
+        })
+        accordion.add("Example steps", layout)
     }
 }

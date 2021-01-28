@@ -1,5 +1,6 @@
 package dawid.kotarba.automater.executor.switches
 
+import dawid.kotarba.automater.Constants
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 import org.slf4j.Logger
@@ -18,11 +19,11 @@ class LoopSwitch extends AbstractStep {
 
     @Override
     StepType getStepType() {
-        StepType.LOOP
+        StepType.SWITCH
     }
 
     @Override
     Optional<String> getSupportedMethod() {
-        Optional.empty()
+        Optional.of(Constants.SWITCH_LOOP)
     }
 }

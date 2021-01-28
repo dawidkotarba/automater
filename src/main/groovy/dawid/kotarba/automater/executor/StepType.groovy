@@ -1,5 +1,5 @@
 package dawid.kotarba.automater.executor
 
 enum StepType {
-    MOUSE, KEYBOARD, SLEEP, LOOP
+    MOUSE, KEYBOARD, SLEEP, SWITCH
 }

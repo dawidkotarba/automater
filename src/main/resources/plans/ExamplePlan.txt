@@ -1,5 +1,5 @@
-# MOUSE idle
-# LOOP
+# SWITCH loop
+# SWITCH mouseIdle
 MOUSE moveTo 100 100
 SLEEP random 200
 MOUSE moveTo 300 300

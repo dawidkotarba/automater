@@ -52,7 +52,7 @@ class PlanExecutor {
             Steps.steps.forEach { step ->
                 if (this.started) {
                     if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
-                        LOGGER.info("Mouse is moving, skipping ${plan.executionLines[i]}")
+                        LOGGER.debug("Mouse is moving, skipping ${plan.executionLines[i]}")
                     } else if (!isExecutionLineCommented(plan.executionLines[i])) {
                         step.executeIfApplicable(plan.executionLines[i])
                     }
@@ -66,11 +66,15 @@ class PlanExecutor {
     }
 
     private static boolean shallLoopExecution(Plan plan) {
-        plan.executionLines.stream().anyMatch({ line -> !isExecutionLineCommented(line) & line.trim() == StepType.LOOP.name() })
+        plan.executionLines.stream().anyMatch({ line ->
+            !isExecutionLineCommented(line) & line.trim().startsWith(StepType.SWITCH.name()) & line.contains(Constants.SWITCH_LOOP)
+        })
     }
 
     private boolean shallSkipWhenMouseIsMoving(List<String> executionLines) {
-        def runWhenIdleMouse = executionLines.stream().anyMatch({ line -> !isExecutionLineCommented(line) & line.contains(StepType.MOUSE.name()) & line.contains(Constants.MOUSE_IDLE) })
+        def runWhenIdleMouse = executionLines.stream().anyMatch({ line ->
+            !isExecutionLineCommented(line) & line.trim().startsWith(StepType.SWITCH.name()) & line.contains(Constants.SWITCH_MOUSE_IDLE)
+        })
         runWhenIdleMouse && mouse.isMouseMoving()
     }
 
