@@ -22,8 +22,14 @@ A very simple Java tool that can help you to automate manual and repetitive proc
 
 ## Run:
 
-```
+```shell
 ./gradlew bootRun
 ```
 
 Then access the configuration page to start the plan: `http://localhost:9999`
+
+To change the default `9999` port:
+
+```shell
+./gradlew bootRun --args='--server.port=8888'
+```
