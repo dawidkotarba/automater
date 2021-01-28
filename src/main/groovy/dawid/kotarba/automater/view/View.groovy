@@ -42,6 +42,7 @@ class View extends VerticalLayout {
     def sleepBetweenStepsField = new TextField("Sleep time between steps:")
     def mouseCoords = new Label()
     def progressBar = new ProgressBar()
+    def progressLabel = new Label("Progress: 0%")
     def startButton = new Button("Start", new Icon(PLAY))
     def stopButton = new Button("Stop [Esc]", new Icon(STOP))
     def mouseCoordsButton = new Button("Capture mouse coords", new Icon(CURSOR))
@@ -78,6 +79,7 @@ class View extends VerticalLayout {
         pageLayout.add(
                 new H1("Automater"),
                 planExecutionLayout,
+                progressLabel,
                 progressBar,
                 mouseCoords,
                 new HorizontalLayout(
@@ -177,10 +179,13 @@ class View extends VerticalLayout {
                 if (!executor.started) {
                     progressBar.indeterminate = false
                     progressBar.value = 1
+                    progressLabel.text = "Progress: 100%"
                 } else if (executor.loopPlan) {
                     progressBar.indeterminate = true
+                    progressLabel.text = "Progress: ..."
                 } else {
                     progressBar.value = executor.planProgress
+                    progressLabel.text = "Progress: ${progressBar.value * 100 as int}%"
                 }
             }
         }
