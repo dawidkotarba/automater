@@ -49,7 +49,7 @@ class PlanExecutor {
     private executeSteps(Plan plan) {
         planProgress = 0
         for (int i = 0; i < plan.executionLines.size(); i++) {
-            Steps.steps.forEach { step ->
+            Steps.steps.keySet().forEach { step ->
                 if (this.started) {
                     if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
                         LOGGER.debug("Mouse is moving, skipping ${plan.executionLines[i]}")
