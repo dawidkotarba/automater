@@ -1,6 +1,6 @@
-### This is an example plan. ###
+###               This is an example plan.              ###
 ### Check "Example Steps" to find out possible actions. ###
-### Type your plan here or upload from file. ###
+###      Type your plan here or upload from file.       ###
 
 # SWITCH loop
 # SWITCH mouseIdle
