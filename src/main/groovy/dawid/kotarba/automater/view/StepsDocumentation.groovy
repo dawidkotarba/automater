@@ -38,8 +38,8 @@ class StepsDocumentation {
         addStep(new MouseMoveByStep(), 'MOUSE moveBy 1 -2', 'Move mouse by the given value in pixels (x,y)')
         addStep(new MouseLeftClick(), 'MOUSE leftClick', 'Click left mouse button')
         addStep(new MouseRightClick(), 'MOUSE rightClick', 'Click right mouse button')
-        addStep(new MouseMoveToPercentStep(), 'MOUSE moveToPercentOfTheScreen 50 50', 'Move mouse to the given position in percents (x,y)')
-        addStep(new MouseMoveByPercentStep(), 'MOUSE moveByPercentOfTheScreen 10 20', 'Move mouse by the given value in in percents (x,y)')
+        addStep(new MouseMoveToPercentStep(), 'MOUSE moveToPercentOfTheScreen 50 50', 'Move mouse to the given position in percent (x,y)')
+        addStep(new MouseMoveByPercentStep(), 'MOUSE moveByPercentOfTheScreen 10 20', 'Move mouse by the given value in percents (x,y)')
         addStep(new MouseScrollStep(), 'MOUSE scroll -1', 'Scroll a mouse wheel (lines, can be negative)')
         addStep(new MouseMoveSomewhereStep(), 'MOUSE moveSomewhere', 'Move a mouse to a random position')
 
