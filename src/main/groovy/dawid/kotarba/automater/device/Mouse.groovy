@@ -16,8 +16,8 @@ class Mouse {
     private final Robot robot
     private final Screen screen
     private final Random random
-    private int lastX = getX()
-    private int lastY = getY()
+    private int lastX = x
+    private int lastY = y
 
     @Autowired
     Mouse(Screen screen) {
@@ -27,21 +27,21 @@ class Mouse {
     }
 
     int getX() {
-        return MouseInfo.getPointerInfo().getLocation().getX()
+        return MouseInfo.pointerInfo.location.x
     }
 
     int getY() {
-        return MouseInfo.getPointerInfo().getLocation().getY()
+        return MouseInfo.pointerInfo.location.y
     }
 
     @Scheduled(fixedDelay = 500L)
     void saveLocation() {
-        lastX = getX()
-        lastY = getY()
+        lastX = x
+        lastY = y
     }
 
     boolean isMouseMoving() {
-        return getX() != lastX || getY() != lastY
+        return x != lastX || y != lastY
     }
 
     void moveTo(int x, int y) {
@@ -49,8 +49,8 @@ class Mouse {
     }
 
     void moveSomewhere() {
-        def width = random.nextInt(screen.getWidth())
-        def height = random.nextInt(screen.getHeight())
+        def width = random.nextInt(screen.width)
+        def height = random.nextInt(screen.height)
         robot.mouseMove(width, height)
     }
 
@@ -62,8 +62,8 @@ class Mouse {
         checkArgument(xPercent >= 0 && xPercent <= 100)
         checkArgument(yPercent >= 0 && yPercent <= 100)
 
-        def x = screen.getWidth() * xPercent / 100
-        def y = screen.getHeight() * yPercent / 100
+        def x = screen.width * xPercent / 100
+        def y = screen.height * yPercent / 100
         moveTo(x as int, y as int)
     }
 
@@ -71,8 +71,8 @@ class Mouse {
         checkArgument(xPercent >= -100 && xPercent <= 100)
         checkArgument(yPercent >= -100 && yPercent <= 100)
 
-        def x = screen.getWidth() * xPercent / 100
-        def y = screen.getHeight() * yPercent / 100
+        def x = screen.width * xPercent / 100
+        def y = screen.height * yPercent / 100
 
         moveTo(getX() + x as int, getY() + y as int)
     }

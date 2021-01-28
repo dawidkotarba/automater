@@ -14,7 +14,7 @@ class WhenMouseIdleSwitch extends AbstractStep {
 
     @Override
     void execute(String executionLine) {
-        LOGGER.println('Found WhenMouseIdleSwitch...')
+        LOGGER.debug('Found WhenMouseIdleSwitch...')
     }
 
     @Override

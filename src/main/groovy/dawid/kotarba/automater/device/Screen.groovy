@@ -9,20 +9,20 @@ import java.awt.*
 class Screen {
 
     int getWidth() {
-        def gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        return gd.getDisplayMode().getWidth();
+        def gd = GraphicsEnvironment.localGraphicsEnvironment.defaultScreenDevice;
+        return gd.displayMode.width;
     }
 
     int getHeight() {
-        def gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        return gd.getDisplayMode().getHeight();
+        def gd = GraphicsEnvironment.localGraphicsEnvironment.defaultScreenDevice;
+        return gd.displayMode.height;
     }
 
     Point getResolution() {
-        return new Point(getWidth(), getHeight())
+        return new Point(width, height)
     }
 
     Point getMiddle() {
-        return new Point(getWidth() / 2 as int, getHeight() / 2 as int)
+        return new Point(width / 2 as int, height / 2 as int)
     }
 }

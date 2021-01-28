@@ -14,7 +14,7 @@ class LoopSwitch extends AbstractStep {
 
     @Override
     void execute(String executionLine) {
-        LOGGER.println("Found a LoopSwitch...")
+        LOGGER.debug("Found a LoopSwitch...")
     }
 
     @Override

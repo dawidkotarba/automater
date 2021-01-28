@@ -15,6 +15,6 @@ final class PlanParser {
     }
 
     static List<String> parseToExecutionLines(ClassPathResource classPathResource) {
-        return classPathResource.getFile().readLines()
+        return classPathResource.file.readLines()
     }
 }

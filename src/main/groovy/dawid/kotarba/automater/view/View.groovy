@@ -155,7 +155,7 @@ class View extends VerticalLayout {
             if (shallCaptureMouseCoordinates) {
                 mouseCoords.text = "Mouse coordinates [ X: ${mouse.x}, Y: ${mouse.y} ]"
             } else {
-                mouseCoords.text = ""
+                mouseCoords.text = ''
             }
         }
 
