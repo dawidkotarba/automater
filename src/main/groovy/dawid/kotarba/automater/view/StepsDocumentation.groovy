@@ -1,11 +1,13 @@
 package dawid.kotarba.automater.view
 
 import dawid.kotarba.automater.executor.Step
+import dawid.kotarba.automater.executor.Steps
 import dawid.kotarba.automater.executor.steps.keyboard.KeyboardHold
 import dawid.kotarba.automater.executor.steps.keyboard.KeyboardPress
 import dawid.kotarba.automater.executor.steps.keyboard.KeyboardRelease
 import dawid.kotarba.automater.executor.steps.keyboard.KeyboardType
 import dawid.kotarba.automater.executor.steps.mouse.MouseLeftClick
+import dawid.kotarba.automater.executor.steps.mouse.MouseMiddleClick
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveByPercentStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveByStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveSomewhereStep
@@ -37,6 +39,7 @@ class StepsDocumentation {
         addStep(new MouseMoveToStep(), 'MOUSE moveTo 100 200', 'Move mouse to the given position (x,y)')
         addStep(new MouseMoveByStep(), 'MOUSE moveBy 1 -2', 'Move mouse by the given value in pixels (x,y)')
         addStep(new MouseLeftClick(), 'MOUSE leftClick', 'Click left mouse button')
+        addStep(new MouseMiddleClick(), 'MOUSE middleClick', 'Click middle mouse button')
         addStep(new MouseRightClick(), 'MOUSE rightClick', 'Click right mouse button')
         addStep(new MouseMoveToPercentStep(), 'MOUSE moveToPercentOfTheScreen 50 50', 'Move mouse to the given position in percent (x,y)')
         addStep(new MouseMoveByPercentStep(), 'MOUSE moveByPercentOfTheScreen 10 20', 'Move mouse by the given value in percents (x,y)')
@@ -46,6 +49,14 @@ class StepsDocumentation {
         // sleep
         addStep(new SleepStep(), 'SLEEP of 500', 'Sleep for a given time (in ms)')
         addStep(new RandomSleepStep(), 'SLEEP random 200', 'Sleep for a given or lower time (upper bound in ms)')
+
+        checkDocumentation()
+    }
+
+    private checkDocumentation() {
+        if (descriptions.size() != Steps.steps.size()) {
+            throw new IllegalStateException("Not all steps are documented!")
+        }
     }
 
     Map<Step, Description> getDescriptions() {

@@ -82,6 +82,11 @@ class Mouse {
         robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK)
     }
 
+    void middleClick() {
+        robot.mousePress(InputEvent.BUTTON2_DOWN_MASK)
+        robot.mouseRelease(InputEvent.BUTTON2_DOWN_MASK)
+    }
+
     void rightClick() {
         robot.mousePress(InputEvent.BUTTON3_DOWN_MASK)
         robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK)
