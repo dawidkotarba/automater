@@ -25,6 +25,7 @@ import dawid.kotarba.automater.Beans
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
+import dawid.kotarba.automater.executor.Steps
 import org.springframework.core.io.ClassPathResource
 
 import java.util.stream.Collectors
@@ -206,10 +207,9 @@ class View extends VerticalLayout {
 
     private Component getStepsDocumentation() {
         Accordion accordion = new Accordion()
-        def documentation = new StepsDocumentation()
 
         def layout = new VerticalLayout()
-        documentation.descriptions.values().toList().forEach({ description ->
+        Steps.steps.values().toList().forEach({ description ->
             def addToPlanButton = new Button("Add")
             addToPlanButton.addClickListener({
                 planExecutionArea.value = "${planExecutionArea.value}\n${description.lineExample}"
