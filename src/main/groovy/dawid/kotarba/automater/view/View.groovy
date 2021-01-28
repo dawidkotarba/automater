@@ -18,6 +18,8 @@ import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.component.progressbar.ProgressBar
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.component.upload.Upload
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.router.Route
 import dawid.kotarba.automater.Beans
 import dawid.kotarba.automater.device.Mouse
@@ -67,7 +69,10 @@ class View extends VerticalLayout {
 
         def planExecutionLayout = new VerticalLayout(
                 planExecutionArea,
-                sleepBetweenStepsField
+                new HorizontalLayout(
+                        sleepBetweenStepsField,
+                        getPlanUpload()
+                )
         )
 
         pageLayout.add(
@@ -179,6 +184,19 @@ class View extends VerticalLayout {
                 }
             }
         }
+    }
+
+    private Component getPlanUpload() {
+        MemoryBuffer buffer = new MemoryBuffer();
+        Upload upload = new Upload(buffer)
+        upload.uploadButton = new Button("Upload plan...")
+        upload.dropLabel = new Label("Drop a file with plan here")
+        upload.addSucceededListener({
+            def executionPlan = buffer.inputStream.readLines().stream().collect(Collectors.joining('\n'))
+            planExecutionArea.value = executionPlan
+        })
+
+        return upload
     }
 
     private Component getStepsDocumentation() {
