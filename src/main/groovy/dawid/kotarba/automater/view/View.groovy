@@ -44,6 +44,7 @@ class View extends VerticalLayout {
     def stopButton = new Button("Stop [Esc]", new Icon(STOP))
     def mouseCoordsButton = new Button("Capture mouse coords", new Icon(CURSOR))
     def shallCaptureMouseCoordinates = false
+    def planRun = false
 
     View() {
         alignItems = Alignment.CENTER
@@ -107,6 +108,7 @@ class View extends VerticalLayout {
                 @Override
                 void run() {
                     def plan = new Plan(planExecutionArea.value, Integer.parseInt(sleepBetweenStepsField.value))
+                    planRun = true
                     executor.start(plan)
                 }
             }).start()
@@ -166,13 +168,15 @@ class View extends VerticalLayout {
         }
 
         private void updateProgressBar(PlanExecutor executor) {
-            if (!executor.started) {
-                progressBar.indeterminate = false
-                progressBar.value = 1
-            } else if (executor.loopPlan) {
-                progressBar.indeterminate = true
-            } else {
-                progressBar.value = executor.planProgress
+            if (planRun) {
+                if (!executor.started) {
+                    progressBar.indeterminate = false
+                    progressBar.value = 1
+                } else if (executor.loopPlan) {
+                    progressBar.indeterminate = true
+                } else {
+                    progressBar.value = executor.planProgress
+                }
             }
         }
     }
