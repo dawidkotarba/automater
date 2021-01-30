@@ -16,8 +16,12 @@ abstract class AbstractStep implements Step {
 
     @Override
     final void executeIfApplicable(String executionLine) {
-        if (shallExecute(executionLine)) {
-            execute(executionLine)
+        try {
+            if (shallExecute(executionLine)) {
+                execute(executionLine)
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot execute step: $executionLine")
         }
     }
 

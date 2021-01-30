@@ -19,14 +19,19 @@ class PlanExecutor {
     private boolean started
 
     void start(Plan plan) {
-        started = true
-        loopExecution = shallLoopExecution(plan)
-        executeSteps(plan)
-
-        while (started & loopExecution) {
+        try {
+            started = true
+            loopExecution = shallLoopExecution(plan)
             executeSteps(plan)
+
+            while (started & loopExecution) {
+                executeSteps(plan)
+            }
+            stop()
         }
-        stop()
+        catch (Exception e) {
+            throw new IllegalStateException(e.getMessage())
+        }
     }
 
     void stop() {

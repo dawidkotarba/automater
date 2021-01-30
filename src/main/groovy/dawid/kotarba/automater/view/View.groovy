@@ -50,7 +50,8 @@ class View extends VerticalLayout {
     def shallCaptureMouseCoordinates = false
     def planRun = false
 
-    View() {
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
         alignItems = Alignment.CENTER
         def pageLayout = new VerticalLayout()
         pageLayout.className = "page"
@@ -65,7 +66,7 @@ class View extends VerticalLayout {
 
         sleepBetweenStepsField.value = "100"
 
-        updateStartButton(planExecutionArea, executor)
+        updateStartButton(attachEvent.UI, planExecutionArea, executor)
         updateStopButton(executor)
         updateMouseCoordsButton()
 
@@ -92,14 +93,7 @@ class View extends VerticalLayout {
         )
 
         add(pageLayout)
-    }
 
-    private String getTestPlanExecutionLines(ClassPathResource testPlan) {
-        testPlan.file.readLines().stream().collect(Collectors.joining('\n'))
-    }
-
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
         componentsThread = new Thread(new ComponentsRunnable(attachEvent.UI))
         componentsThread.start()
     }
@@ -110,14 +104,21 @@ class View extends VerticalLayout {
         componentsThread = null
     }
 
-    private updateStartButton(TextArea planExecutionArea, PlanExecutor executor) {
+    private updateStartButton(UI ui, TextArea planExecutionArea, PlanExecutor executor) {
         startButton.addClickListener({
             new Thread(new Runnable() {
                 @Override
                 void run() {
-                    def plan = new Plan(planExecutionArea.value, Integer.parseInt(sleepBetweenStepsField.value))
-                    planRun = true
-                    executor.start(plan)
+                    try {
+                        def plan = new Plan(planExecutionArea.value, Integer.parseInt(sleepBetweenStepsField.value))
+                        planRun = true
+                        executor.start(plan)
+                    } catch (Exception e) {
+                        ui.access {
+                            Notification.show(e.getMessage(), 3000, Notification.Position.MIDDLE)
+                            executor.stop()
+                        }
+                    }
                 }
             }).start()
         })
@@ -127,7 +128,7 @@ class View extends VerticalLayout {
         stopButton.addClickShortcut(Key.ESCAPE)
         stopButton.addClickListener({
             executor.stop()
-            new Notification("Execution stopped", 3000).open()
+            Notification.show("Execution stopped", 1000, Notification.Position.MIDDLE)
         })
     }
 
@@ -135,6 +136,10 @@ class View extends VerticalLayout {
         mouseCoordsButton.addClickListener({
             shallCaptureMouseCoordinates = !shallCaptureMouseCoordinates
         })
+    }
+
+    private String getTestPlanExecutionLines(ClassPathResource testPlan) {
+        testPlan.file.readLines().stream().collect(Collectors.joining('\n'))
     }
 
     private class ComponentsRunnable implements Runnable {

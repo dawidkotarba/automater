@@ -13,3 +13,7 @@
     font-family: monospace;
     font-size: large;
 }
+
+.errorNotification {
+width: 800px;
+}
