@@ -64,8 +64,7 @@ class View extends VerticalLayout {
         def testPlanText = getTestPlanExecutionLines(testPlan)
         planExecutionArea.value = testPlanText
 
-        sleepBetweenStepsField.value = "100"
-
+        updateSleepBetweenStepsField()
         updateStartButton(attachEvent.UI, planExecutionArea, executor)
         updateStopButton(executor)
         updateMouseCoordsButton()
@@ -96,6 +95,18 @@ class View extends VerticalLayout {
 
         componentsThread = new Thread(new ComponentsRunnable(attachEvent.UI))
         componentsThread.start()
+    }
+
+    private updateSleepBetweenStepsField() {
+        def defaultSleepTime = "100"
+        sleepBetweenStepsField.value = defaultSleepTime
+        sleepBetweenStepsField.addValueChangeListener({
+            if (!sleepBetweenStepsField.value.matches("\\d+")) {
+                sleepBetweenStepsField.value = defaultSleepTime
+            } else if (Integer.parseInt(sleepBetweenStepsField.value) < 0) {
+                sleepBetweenStepsField.value = defaultSleepTime
+            }
+        })
     }
 
     @Override
