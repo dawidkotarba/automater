@@ -13,7 +13,7 @@ import dawid.kotarba.automater.executor.steps.mouse.MouseMoveToPercentStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveToStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseRightClick
 import dawid.kotarba.automater.executor.steps.mouse.MouseScrollStep
-import dawid.kotarba.automater.executor.steps.sleep.RandomSleepStep
+import dawid.kotarba.automater.executor.steps.sleep.SleepRandomStep
 import dawid.kotarba.automater.executor.steps.sleep.SleepStep
 import dawid.kotarba.automater.executor.switches.LoopSwitch
 import dawid.kotarba.automater.executor.switches.WhenMouseIdleSwitch
@@ -45,7 +45,7 @@ class Steps {
 
         // sleep
         addStep(new SleepStep(), 'SLEEP of 500', 'Sleep for a given time (in ms)')
-        addStep(new RandomSleepStep(), 'SLEEP random 200', 'Sleep for a given or lower time (upper bound in ms)')
+        addStep(new SleepRandomStep(), 'SLEEP random 200', 'Sleep for a given or lower time (upper bound in ms)')
     }
 
     static Map<Step, Description> getSteps() {
