@@ -1,5 +1,4 @@
 .page {
-    background-color: white;
     width: 900px !important;
 }
 
@@ -12,8 +11,4 @@
 .lineExampleLabel {
     font-family: monospace;
     font-size: large;
-}
-
-.errorNotification {
-width: 800px;
 }
