@@ -39,14 +39,14 @@ class View extends VerticalLayout {
 
     private Thread componentsThread
 
-    def planExecutionArea = new TextArea("Execute a Plan:")
-    def sleepBetweenStepsField = new TextField("Sleep time between steps:")
+    def planExecutionArea = new TextArea('Execute a Plan:')
+    def sleepBetweenStepsField = new TextField('Sleep time between steps:')
     def mouseCoords = new Label()
     def progressBar = new ProgressBar()
-    def progressLabel = new Label("Progress: 0%")
-    def startButton = new Button("Start", new Icon(PLAY))
-    def stopButton = new Button("Stop [Esc]", new Icon(STOP))
-    def mouseCoordsButton = new Button("Capture mouse coords", new Icon(CURSOR))
+    def progressLabel = new Label('Progress: 0%')
+    def startButton = new Button('Start', new Icon(PLAY))
+    def stopButton = new Button('Stop [Esc]', new Icon(STOP))
+    def mouseCoordsButton = new Button('Capture mouse coords', new Icon(CURSOR))
     def shallCaptureMouseCoordinates = false
     def planRun = false
 
@@ -54,12 +54,12 @@ class View extends VerticalLayout {
     protected void onAttach(AttachEvent attachEvent) {
         alignItems = Alignment.CENTER
         def pageLayout = new VerticalLayout()
-        pageLayout.className = "page"
+        pageLayout.className = 'page'
         pageLayout.alignItems = Alignment.CENTER
 
         def executor = Beans.planExecutor
 
-        planExecutionArea.className = "planExecutionArea"
+        planExecutionArea.className = 'planExecutionArea'
         def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
         def testPlanText = getTestPlanExecutionLines(testPlan)
         planExecutionArea.value = testPlanText
@@ -78,7 +78,7 @@ class View extends VerticalLayout {
         )
 
         pageLayout.add(
-                new H2("Automater"),
+                new H2('Automater'),
                 planExecutionLayout,
                 progressLabel,
                 progressBar,
@@ -98,10 +98,10 @@ class View extends VerticalLayout {
     }
 
     private updateSleepBetweenStepsField() {
-        def defaultSleepTime = "100"
+        def defaultSleepTime = '100'
         sleepBetweenStepsField.value = defaultSleepTime
         sleepBetweenStepsField.addValueChangeListener({
-            if (!sleepBetweenStepsField.value.matches("\\d+")) {
+            if (!sleepBetweenStepsField.value.matches('\\d+')) {
                 sleepBetweenStepsField.value = defaultSleepTime
             } else if (Integer.parseInt(sleepBetweenStepsField.value) < 0) {
                 sleepBetweenStepsField.value = defaultSleepTime
@@ -139,7 +139,7 @@ class View extends VerticalLayout {
         stopButton.addClickShortcut(Key.ESCAPE)
         stopButton.addClickListener({
             executor.stop()
-            Notification.show("Execution stopped", 1000, Notification.Position.MIDDLE)
+            Notification.show('Execution stopped', 1000, Notification.Position.MIDDLE)
         })
     }
 
@@ -196,10 +196,10 @@ class View extends VerticalLayout {
                 if (!executor.started) {
                     progressBar.indeterminate = false
                     progressBar.value = 1
-                    progressLabel.text = "Progress: 100%"
+                    progressLabel.text = 'Progress: 100%'
                 } else if (executor.loopPlan) {
                     progressBar.indeterminate = true
-                    progressLabel.text = "Progress: ..."
+                    progressLabel.text = 'Progress: ...'
                 } else {
                     progressBar.value = executor.planProgress
                     progressLabel.text = "Progress: ${progressBar.value * 100 as int}%"
@@ -209,10 +209,10 @@ class View extends VerticalLayout {
     }
 
     private Component getPlanUpload() {
-        MemoryBuffer buffer = new MemoryBuffer();
+        MemoryBuffer buffer = new MemoryBuffer()
         Upload upload = new Upload(buffer)
-        upload.uploadButton = new Button("Upload plan...")
-        upload.dropLabel = new Label("Drop a file with plan here")
+        upload.uploadButton = new Button('Upload plan...')
+        upload.dropLabel = new Label('Drop a file with plan here')
         upload.addSucceededListener({
             def executionPlan = buffer.inputStream.readLines().stream().collect(Collectors.joining('\n'))
             planExecutionArea.value = executionPlan
@@ -226,7 +226,7 @@ class View extends VerticalLayout {
 
         def layout = new VerticalLayout()
         Steps.steps.values().toList().forEach({ description ->
-            def addToPlanButton = new Button("Add")
+            def addToPlanButton = new Button('Add')
             addToPlanButton.addClickListener({
                 planExecutionArea.value = "${planExecutionArea.value}\n${description.lineExample}"
             })
@@ -237,6 +237,6 @@ class View extends VerticalLayout {
             def labels = new HorizontalLayout(addToPlanButton, lineExampleLabel, usageLabel)
             layout.add(labels)
         })
-        accordion.add("Example steps", layout)
+        accordion.add('Example steps', layout)
     }
 }
