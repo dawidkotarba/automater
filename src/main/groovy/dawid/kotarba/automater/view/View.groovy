@@ -8,7 +8,7 @@ import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.accordion.Accordion
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dependency.CssImport
-import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.notification.Notification
@@ -79,7 +79,7 @@ class View extends VerticalLayout {
         )
 
         pageLayout.add(
-                new H1("Automater"),
+                new H2("Automater"),
                 planExecutionLayout,
                 progressLabel,
                 progressBar,
