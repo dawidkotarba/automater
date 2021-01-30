@@ -1,10 +1,12 @@
 package dawid.kotarba.automater.executor
 
-import com.google.common.base.Preconditions
+
 import dawid.kotarba.automater.Beans
 import dawid.kotarba.automater.device.Keyboard
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.device.Screen
+
+import static com.google.common.base.Preconditions.checkArgument
 
 abstract class AbstractStep implements Step {
     protected Mouse mouse = Beans.mouse
@@ -14,7 +16,7 @@ abstract class AbstractStep implements Step {
 
     private boolean shallExecute(String executionLine) {
         def tokenizedExecutionLine = executionLine.tokenize()
-        Preconditions.checkArgument(tokenizedExecutionLine.size() >= 2)
+        checkArgument(tokenizedExecutionLine.size() >= 2)
         return tokenizedExecutionLine[0] == stepType.name() & tokenizedExecutionLine[1] == getSupportedMethod().orElseGet({
             return ''
         })
