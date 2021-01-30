@@ -1,17 +1,23 @@
 package dawid.kotarba.automater.executor
 
+import com.google.common.base.Preconditions
 import dawid.kotarba.automater.Beans
 import dawid.kotarba.automater.device.Keyboard
 import dawid.kotarba.automater.device.Mouse
+import dawid.kotarba.automater.device.Screen
 
 abstract class AbstractStep implements Step {
     protected Mouse mouse = Beans.mouse
     protected Keyboard keyboard = Beans.keyboard
+    protected Screen screen = Beans.screen
+    protected Random random = new Random()
 
-    private shallExecute(String executionLine) {
-        return executionLine.startsWith(getStepType().name()) & executionLine.contains(getSupportedMethod().orElseGet({
+    private boolean shallExecute(String executionLine) {
+        def tokenizedExecutionLine = executionLine.tokenize()
+        Preconditions.checkArgument(tokenizedExecutionLine.size() >= 2)
+        return tokenizedExecutionLine[0] == stepType.name() & tokenizedExecutionLine[1] == getSupportedMethod().orElseGet({
             return ''
-        }))
+        })
     }
 
     @Override
@@ -28,12 +34,12 @@ abstract class AbstractStep implements Step {
     abstract void execute(String executionLine);
 
     List<String> getParams(String executionLine) {
-        def parameters = executionLine.tokenize()
-        parameters.remove(getStepType().name())
+        def tokenizedExecutionLine = executionLine.tokenize()
+        tokenizedExecutionLine.remove(getStepType().name())
         getSupportedMethod().ifPresent({
-            parameters.remove(it)
+            tokenizedExecutionLine.remove(it)
         })
-        return parameters
+        return tokenizedExecutionLine
     }
 
     String getStringParam(String executionLine) {

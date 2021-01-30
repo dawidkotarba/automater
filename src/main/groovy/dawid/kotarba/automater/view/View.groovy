@@ -125,6 +125,7 @@ class View extends VerticalLayout {
                         planRun = true
                         executor.start(plan)
                     } catch (Exception e) {
+                        e.printStackTrace()
                         ui.access {
                             Notification.show(e.getMessage(), 3000, Notification.Position.MIDDLE)
                             executor.stop()

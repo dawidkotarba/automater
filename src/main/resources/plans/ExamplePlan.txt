@@ -14,7 +14,7 @@ MOUSE moveTo 500 500
 MOUSE moveTo 800 800
 MOUSE rightClick
 MOUSE leftClick
-MOUSE moveSomewhere
-MOUSE scroll 1
+MOUSE moveRandom
 MOUSE scroll -1
+MOUSE scrollRandom 5
 SLEEP of 500

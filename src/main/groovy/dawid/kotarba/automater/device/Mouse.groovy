@@ -15,7 +15,6 @@ class Mouse {
 
     private final Robot robot
     private final Screen screen
-    private final Random random
     private int lastX = x
     private int lastY = y
 
@@ -23,7 +22,6 @@ class Mouse {
     Mouse(Screen screen) {
         this.robot = new Robot()
         this.screen = screen
-        random = new Random()
     }
 
     int getX() {
@@ -46,12 +44,6 @@ class Mouse {
 
     void moveTo(int x, int y) {
         robot.mouseMove(x, y)
-    }
-
-    void moveSomewhere() {
-        def width = random.nextInt(screen.width)
-        def height = random.nextInt(screen.height)
-        robot.mouseMove(width, height)
     }
 
     void moveBy(int x, int y) {

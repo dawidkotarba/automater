@@ -8,9 +8,10 @@ import dawid.kotarba.automater.executor.steps.mouse.MouseLeftClick
 import dawid.kotarba.automater.executor.steps.mouse.MouseMiddleClick
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveByPercentStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveByStep
-import dawid.kotarba.automater.executor.steps.mouse.MouseMoveSomewhereStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveToPercentStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseMoveToStep
+import dawid.kotarba.automater.executor.steps.mouse.MouseRandomMoveStep
+import dawid.kotarba.automater.executor.steps.mouse.MouseRandomScrollStep
 import dawid.kotarba.automater.executor.steps.mouse.MouseRightClick
 import dawid.kotarba.automater.executor.steps.mouse.MouseScrollStep
 import dawid.kotarba.automater.executor.steps.sleep.SleepRandomStep
@@ -41,7 +42,8 @@ class Steps {
         addStep(new MouseMoveToPercentStep(), 'MOUSE moveToPercentOfTheScreen 50 50', 'Move mouse to the given position in percent (x,y)')
         addStep(new MouseMoveByPercentStep(), 'MOUSE moveByPercentOfTheScreen 10 20', 'Move mouse by the given value in percents (x,y)')
         addStep(new MouseScrollStep(), 'MOUSE scroll -1', 'Scroll a mouse wheel (lines, can be negative)')
-        addStep(new MouseMoveSomewhereStep(), 'MOUSE moveSomewhere', 'Move a mouse to a random position')
+        addStep(new MouseRandomScrollStep(), 'MOUSE scrollRandom 5', 'Scroll a mouse wheel randomly (upper bound, can be negative)')
+        addStep(new MouseRandomMoveStep(), 'MOUSE moveRandom', 'Move a mouse to a random position')
 
         // sleep
         addStep(new SleepStep(), 'SLEEP of 500', 'Sleep for a given time (in ms)')
