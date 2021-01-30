@@ -44,7 +44,7 @@ class View extends VerticalLayout {
     def mouseCoords = new Label()
     def progressBar = new ProgressBar()
     def progressLabel = new Label('Progress: 0%')
-    def startButton = new Button('Start', new Icon(PLAY))
+    def startButton = new Button('Start [F2]', new Icon(PLAY))
     def stopButton = new Button('Stop [Esc]', new Icon(STOP))
     def mouseCoordsButton = new Button('Capture mouse coords', new Icon(CURSOR))
     def shallCaptureMouseCoordinates = false
@@ -116,6 +116,7 @@ class View extends VerticalLayout {
     }
 
     private updateStartButton(UI ui, TextArea planExecutionArea, PlanExecutor executor) {
+        startButton.addClickShortcut(Key.F2)
         startButton.addClickListener({
             new Thread(new Runnable() {
                 @Override
