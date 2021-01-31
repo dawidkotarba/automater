@@ -24,7 +24,7 @@ class KeyboardHold extends AbstractStep {
     }
 
     @Override
-    int argumentsCount() {
+    int getArgumentsCount() {
         return 1
     }
 }

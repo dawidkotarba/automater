@@ -20,7 +20,7 @@ class MouseLeftClick extends AbstractStep {
     }
 
     @Override
-    int argumentsCount() {
+    int getArgumentsCount() {
         0
     }
 }

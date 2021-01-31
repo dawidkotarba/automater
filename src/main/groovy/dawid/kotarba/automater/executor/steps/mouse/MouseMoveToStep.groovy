@@ -21,7 +21,7 @@ class MouseMoveToStep extends AbstractStep {
     }
 
     @Override
-    int argumentsCount() {
+    int getArgumentsCount() {
         2
     }
 }

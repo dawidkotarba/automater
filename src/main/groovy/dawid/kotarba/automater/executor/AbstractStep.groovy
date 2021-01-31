@@ -17,10 +17,11 @@ abstract class AbstractStep implements Step {
     @Override
     boolean isApplicable(String executionLine) {
         def tokenizedExecutionLine = executionLine.tokenize()
-        checkArgument(tokenizedExecutionLine.size() >= 2)
-        return tokenizedExecutionLine[0] == stepType.name() & tokenizedExecutionLine[1] == getMethod().orElseGet({
+        def executionLineDefinitionSize = 2
+        checkArgument(tokenizedExecutionLine.size() >= executionLineDefinitionSize)
+        return tokenizedExecutionLine[0] == stepType.name() && tokenizedExecutionLine[1] == getMethod().orElseGet({
             return ''
-        })
+        }) && tokenizedExecutionLine.size() == executionLineDefinitionSize + getArgumentsCount()
     }
 
     @Override
