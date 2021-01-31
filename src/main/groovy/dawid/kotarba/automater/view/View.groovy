@@ -49,6 +49,7 @@ class View extends VerticalLayout {
     def mouseCoordsCurrent = new Label()
     def mouseCoordsCaptured = new Label()
     def captureMouseButton = new Button('Capture coords [F4]', new Icon(CURSOR))
+    def captureAddMouseButton = new Button('Capture and add coords [F8]', new Icon(CURSOR))
     boolean shallCaptureMouseCoordinates
 
     def planRun = false
@@ -72,7 +73,8 @@ class View extends VerticalLayout {
         updateSleepBetweenStepsField()
         updateStartButton(attachEvent.UI, planExecutionArea, executor)
         updateStopButton(executor)
-        updateCaptureMuseCoordsButton()
+        updateCaptureMouseCoordsButton()
+        updateCaptureAddMouseCoordsButton()
 
         def planExecutionLayout = new VerticalLayout(
                 planExecutionArea,
@@ -151,11 +153,20 @@ class View extends VerticalLayout {
         }
     }
 
-    private void updateCaptureMuseCoordsButton() {
+    private void updateCaptureMouseCoordsButton() {
         def mouse = Beans.mouse
         captureMouseButton.addClickShortcut(Key.F4)
         captureMouseButton.addClickListener {
             mouseCoordsCaptured.text = "MOUSE moveTo ${mouse.x} ${mouse.y}"
+        }
+    }
+
+    private void updateCaptureAddMouseCoordsButton() {
+        def mouse = Beans.mouse
+        captureAddMouseButton.addClickShortcut(Key.F8)
+        captureAddMouseButton.addClickListener {
+            mouseCoordsCaptured.text = "MOUSE moveTo ${mouse.x} ${mouse.y}"
+            planExecutionArea.value = "${planExecutionArea.value}\n${mouseCoordsCaptured.text}"
         }
     }
 
@@ -234,7 +245,7 @@ class View extends VerticalLayout {
     private Component getMouseCaptureComponent() {
         def layout = new VerticalLayout(
                 new HorizontalLayout(mouseCoordsCurrent, mouseCoordsCaptured),
-                captureMouseButton
+                new HorizontalLayout(captureMouseButton, captureAddMouseButton)
         )
 
         Accordion accordion = new Accordion()
