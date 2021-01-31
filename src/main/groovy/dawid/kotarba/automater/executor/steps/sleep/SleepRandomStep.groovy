@@ -19,4 +19,9 @@ class SleepRandomStep extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('random')
     }
+
+    @Override
+    int argumentsCount() {
+        1
+    }
 }

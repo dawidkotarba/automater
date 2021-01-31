@@ -25,4 +25,9 @@ class MouseRandomScrollStep extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('scrollRandom')
     }
+
+    @Override
+    int argumentsCount() {
+        1
+    }
 }

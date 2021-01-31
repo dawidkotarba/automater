@@ -26,4 +26,9 @@ class LoopSwitch extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of(Constants.SWITCH_LOOP)
     }
+
+    @Override
+    int argumentsCount() {
+        0
+    }
 }

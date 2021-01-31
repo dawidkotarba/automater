@@ -21,4 +21,9 @@ class MouseRandomMoveStep extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('moveRandom')
     }
+
+    @Override
+    int argumentsCount() {
+        0
+    }
 }

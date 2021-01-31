@@ -19,4 +19,9 @@ class MouseMoveToStep extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('moveTo')
     }
+
+    @Override
+    int argumentsCount() {
+        2
+    }
 }

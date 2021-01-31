@@ -19,4 +19,9 @@ class SleepStep extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('of')
     }
+
+    @Override
+    int argumentsCount() {
+        1
+    }
 }

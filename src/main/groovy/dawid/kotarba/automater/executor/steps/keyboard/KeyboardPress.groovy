@@ -22,4 +22,9 @@ class KeyboardPress extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('press')
     }
+
+    @Override
+    int argumentsCount() {
+        1
+    }
 }

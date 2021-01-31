@@ -22,4 +22,9 @@ class KeyboardRelease extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('release')
     }
+
+    @Override
+    int argumentsCount() {
+        1
+    }
 }

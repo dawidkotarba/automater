@@ -18,4 +18,9 @@ class MouseRightClick extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('rightClick')
     }
+
+    @Override
+    int argumentsCount() {
+        0
+    }
 }

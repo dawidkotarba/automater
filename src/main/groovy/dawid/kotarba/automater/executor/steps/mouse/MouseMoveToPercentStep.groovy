@@ -19,4 +19,9 @@ class MouseMoveToPercentStep extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('moveToPercentOfTheScreen')
     }
+
+    @Override
+    int argumentsCount() {
+        2
+    }
 }

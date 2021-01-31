@@ -19,4 +19,9 @@ class MouseScrollStep extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('scroll')
     }
+
+    @Override
+    int argumentsCount() {
+        1
+    }
 }

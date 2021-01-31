@@ -18,4 +18,9 @@ class MouseMiddleClick extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('middleClick')
     }
+
+    @Override
+    int argumentsCount() {
+        0
+    }
 }

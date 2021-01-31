@@ -6,6 +6,8 @@ interface Step {
 
     Optional<String> getMethod()
 
+    int argumentsCount()
+
     boolean isApplicable(String executionLine)
 
     void executeIfApplicable(String executionLine)

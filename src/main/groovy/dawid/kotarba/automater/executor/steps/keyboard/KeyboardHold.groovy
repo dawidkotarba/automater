@@ -22,4 +22,9 @@ class KeyboardHold extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('hold')
     }
+
+    @Override
+    int argumentsCount() {
+        return 1
+    }
 }

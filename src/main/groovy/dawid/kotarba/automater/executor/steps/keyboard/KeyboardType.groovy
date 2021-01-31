@@ -20,4 +20,9 @@ class KeyboardType extends AbstractStep {
     Optional<String> getMethod() {
         Optional.of('type')
     }
+
+    @Override
+    int argumentsCount() {
+        1
+    }
 }
