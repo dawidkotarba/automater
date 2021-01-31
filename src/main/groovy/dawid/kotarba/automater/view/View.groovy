@@ -47,7 +47,7 @@ class View extends VerticalLayout {
     private def componentsThread
 
     private def planExecutionArea = new TextArea('Execute a Plan:')
-    private def sleepBetweenStepsField = new TextField('Sleep time between steps:')
+    private def sleepBetweenStepsField = new TextField('Sleep time between steps (ms):')
     private def progressBar = new ProgressBar()
     private def progressLabel = new Label('Progress: 0%')
     private def startButton = new Button('Start [F2]', new Icon(PLAY))
