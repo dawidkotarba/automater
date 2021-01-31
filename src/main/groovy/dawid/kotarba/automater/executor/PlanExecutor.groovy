@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 import java.lang.invoke.MethodHandles
+import java.util.stream.Collectors
 
 @Service
 class PlanExecutor {
@@ -18,9 +19,10 @@ class PlanExecutor {
     private boolean loopExecution
     private boolean started
 
-    void start(Plan plan) {
+    def start(Plan plan) {
         try {
             started = true
+            preValidate(plan)
             loopExecution = shallLoopExecution(plan)
             executeSteps(plan)
 
@@ -34,7 +36,7 @@ class PlanExecutor {
         }
     }
 
-    void stop() {
+    def stop() {
         started = false
         loopExecution = false
     }
@@ -51,16 +53,40 @@ class PlanExecutor {
         return loopExecution
     }
 
-    private executeSteps(Plan plan) {
+    def preValidate(Plan plan) {
+        def supportedStepLines = Steps.steps.keySet()
+                .stream()
+                .map({
+            "${it.getStepType()} ${it.getSupportedMethod().get()}"
+        })
+                .collect(Collectors.toList())
+
+        plan.executionLines.stream()
+                .map({ it.trim() })
+                .forEach { line ->
+            def match = supportedStepLines.stream().anyMatch { stepLine ->
+                line.startsWith(stepLine)
+            }
+
+            if (!match & !isExecutionLineCommented(line)) {
+                throw new UnsupportedOperationException("Cannot execute: $line")
+            }
+        }
+    }
+
+
+    def executeSteps(Plan plan) {
         planProgress = 0
         for (int i = 0; i < plan.executionLines.size(); i++) {
             Steps.steps.keySet().forEach { step ->
-                if (this.started) {
+                if (started) {
                     if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
                         LOGGER.debug("Mouse is moving, skipping ${plan.executionLines[i]}")
                     } else if (!isExecutionLineCommented(plan.executionLines[i])) {
                         step.executeIfApplicable(plan.executionLines[i])
                     }
+                } else {
+                    return
                 }
             }
             if (!isExecutionLineCommented(plan.executionLines[i])) {

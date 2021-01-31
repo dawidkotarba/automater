@@ -14,7 +14,8 @@ abstract class AbstractStep implements Step {
     protected Screen screen = Beans.screen
     protected Random random = new Random()
 
-    private boolean shallExecute(String executionLine) {
+    @Override
+    boolean isApplicable(String executionLine) {
         def tokenizedExecutionLine = executionLine.tokenize()
         checkArgument(tokenizedExecutionLine.size() >= 2)
         return tokenizedExecutionLine[0] == stepType.name() & tokenizedExecutionLine[1] == getSupportedMethod().orElseGet({
@@ -25,7 +26,7 @@ abstract class AbstractStep implements Step {
     @Override
     final void executeIfApplicable(String executionLine) {
         try {
-            if (shallExecute(executionLine)) {
+            if (isApplicable(executionLine)) {
                 execute(executionLine)
             }
         } catch (Exception e) {
