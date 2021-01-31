@@ -57,7 +57,7 @@ class PlanExecutor {
         def supportedStepLines = Steps.steps.keySet()
                 .stream()
                 .map({
-            "${it.getStepType()} ${it.getSupportedMethod().get()}"
+            "${it.getStepType()} ${it.getMethod().get()}"
         })
                 .collect(Collectors.toList())
 

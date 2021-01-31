@@ -23,7 +23,7 @@ class WhenMouseIdleSwitch extends AbstractStep {
     }
 
     @Override
-    Optional<String> getSupportedMethod() {
+    Optional<String> getMethod() {
         Optional.of(Constants.SWITCH_MOUSE_IDLE)
     }
 }

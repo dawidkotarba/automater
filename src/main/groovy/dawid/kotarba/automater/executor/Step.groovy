@@ -4,7 +4,7 @@ interface Step {
 
     StepType getStepType()
 
-    Optional<String> getSupportedMethod()
+    Optional<String> getMethod()
 
     boolean isApplicable(String executionLine)
 

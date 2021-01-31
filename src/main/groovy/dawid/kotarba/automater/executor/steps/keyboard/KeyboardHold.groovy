@@ -19,7 +19,7 @@ class KeyboardHold extends AbstractStep {
     }
 
     @Override
-    Optional<String> getSupportedMethod() {
+    Optional<String> getMethod() {
         Optional.of('hold')
     }
 }

@@ -18,7 +18,7 @@ abstract class AbstractStep implements Step {
     boolean isApplicable(String executionLine) {
         def tokenizedExecutionLine = executionLine.tokenize()
         checkArgument(tokenizedExecutionLine.size() >= 2)
-        return tokenizedExecutionLine[0] == stepType.name() & tokenizedExecutionLine[1] == getSupportedMethod().orElseGet({
+        return tokenizedExecutionLine[0] == stepType.name() & tokenizedExecutionLine[1] == getMethod().orElseGet({
             return ''
         })
     }
@@ -39,7 +39,7 @@ abstract class AbstractStep implements Step {
     List<String> getParams(String executionLine) {
         def tokenizedExecutionLine = executionLine.tokenize()
         tokenizedExecutionLine.remove(getStepType().name())
-        getSupportedMethod().ifPresent({
+        getMethod().ifPresent({
             tokenizedExecutionLine.remove(it)
         })
         return tokenizedExecutionLine
