@@ -265,7 +265,7 @@ class View extends VerticalLayout {
 
     private Component getStepsDocumentation() {
         def layout = new VerticalLayout()
-        Steps.steps.values().toList().forEach({ description ->
+        Steps.steps.values().toList().forEach { description ->
             def addToPlanButton = new Button('Add')
             addToPlanButton.addClickListener({
                 planExecutionArea.value = "${planExecutionArea.value}\n${description.lineExample}"
@@ -276,7 +276,7 @@ class View extends VerticalLayout {
             def usageLabel = new Label("${description.usage}")
             def labels = new HorizontalLayout(addToPlanButton, lineExampleLabel, usageLabel)
             layout.add(labels)
-        })
+        }
 
         def accordion = new Accordion()
         accordion.close()

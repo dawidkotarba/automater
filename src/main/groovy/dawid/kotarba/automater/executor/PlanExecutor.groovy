@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 import java.lang.invoke.MethodHandles
-import java.util.stream.Collectors
 
 @Service
 class PlanExecutor {
@@ -22,11 +21,11 @@ class PlanExecutor {
     def start(Plan plan) {
         try {
             started = true
-            preValidate(plan)
+            validate(plan)
             loopExecution = shallLoopExecution(plan)
             executeSteps(plan)
 
-            while (started & loopExecution) {
+            while (started && loopExecution) {
                 executeSteps(plan)
             }
             stop()
@@ -53,23 +52,19 @@ class PlanExecutor {
         return loopExecution
     }
 
-    def preValidate(Plan plan) {
-        def supportedStepLines = Steps.steps.keySet()
-                .stream()
-                .map({
-            "${it.getStepType()} ${it.getMethod().get()}"
-        })
-                .collect(Collectors.toList())
-
+    def validate(Plan plan) {
         plan.executionLines.stream()
                 .map({ it.trim() })
-                .forEach { line ->
-            def match = supportedStepLines.stream().anyMatch { stepLine ->
-                line.startsWith(stepLine)
+                .forEach { executionLine ->
+            def match = Steps.steps.keySet().stream().anyMatch { stepLine ->
+                def tokenizedExecutionLine = executionLine.tokenize()
+                tokenizedExecutionLine[0] == stepLine.getStepType().name() &&
+                        tokenizedExecutionLine[1] == stepLine.method.get() &&
+                        tokenizedExecutionLine.size() == 2 + stepLine.argumentsCount
             }
 
-            if (!match & !isExecutionLineCommented(line)) {
-                throw new UnsupportedOperationException("Cannot execute: $line")
+            if (!match && !isExecutionLineCommented(executionLine)) {
+                throw new UnsupportedOperationException("Validation error: $executionLine")
             }
         }
     }
@@ -97,15 +92,15 @@ class PlanExecutor {
     }
 
     private static boolean shallLoopExecution(Plan plan) {
-        plan.executionLines.stream().anyMatch({ line ->
-            !isExecutionLineCommented(line) & line.trim().startsWith(StepType.SWITCH.name()) & line.contains(Constants.SWITCH_LOOP)
-        })
+        plan.executionLines.stream().anyMatch { line ->
+            !isExecutionLineCommented(line) && line.contains(Constants.SWITCH_LOOP)
+        }
     }
 
     private boolean shallSkipWhenMouseIsMoving(List<String> executionLines) {
-        def runWhenIdleMouse = executionLines.stream().anyMatch({ line ->
-            !isExecutionLineCommented(line) & line.trim().startsWith(StepType.SWITCH.name()) & line.contains(Constants.SWITCH_MOUSE_IDLE)
-        })
+        def runWhenIdleMouse = executionLines.stream().anyMatch { line ->
+            !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_IDLE)
+        }
         runWhenIdleMouse && mouse.isMouseMoving()
     }
 
