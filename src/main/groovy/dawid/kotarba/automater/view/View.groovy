@@ -20,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
@@ -30,11 +31,14 @@ import org.springframework.core.io.ClassPathResource
 
 import java.util.stream.Collectors
 
-import static com.vaadin.flow.component.icon.VaadinIcon.*
+import static com.vaadin.flow.component.icon.VaadinIcon.CURSOR
+import static com.vaadin.flow.component.icon.VaadinIcon.PLAY
+import static com.vaadin.flow.component.icon.VaadinIcon.STOP
 
 @Route
 @Push
 @CssImport('./styles/styles.css')
+@PageTitle('automater')
 class View extends VerticalLayout {
 
     private def executor
@@ -94,7 +98,7 @@ class View extends VerticalLayout {
         accordionSection.setHorizontalComponentAlignment(Alignment.START)
 
         pageLayout.add(
-                new H2('Automater'),
+                new H2('automater'),
                 planExecutionLayout,
                 progressLabel,
                 progressBar,
@@ -232,8 +236,8 @@ class View extends VerticalLayout {
     }
 
     private Component getPlanUpload() {
-        MemoryBuffer buffer = new MemoryBuffer()
-        Upload upload = new Upload(buffer)
+        def buffer = new MemoryBuffer()
+        def upload = new Upload(buffer)
         upload.uploadButton = new Button('Upload plan...')
         upload.dropLabel = new Label('Drop a file with plan here')
         upload.addSucceededListener({
@@ -250,11 +254,12 @@ class View extends VerticalLayout {
                 new HorizontalLayout(captureMouseButton, captureAddMouseButton)
         )
 
-        Accordion accordion = new Accordion()
+        def accordion = new Accordion()
         accordion.add('Mouse coordinates', layout)
         accordion.addOpenedChangeListener {
             shallCaptureMouseCoordinates = it.openedIndex.isPresent()
         }
+        accordion.close()
         return accordion
     }
 
@@ -273,7 +278,9 @@ class View extends VerticalLayout {
             layout.add(labels)
         })
 
-        Accordion accordion = new Accordion()
+        def accordion = new Accordion()
+        accordion.close()
         accordion.add('Example steps', layout)
+        return accordion
     }
 }
