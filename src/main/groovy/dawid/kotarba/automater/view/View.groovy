@@ -41,13 +41,16 @@ class View extends VerticalLayout {
 
     def planExecutionArea = new TextArea('Execute a Plan:')
     def sleepBetweenStepsField = new TextField('Sleep time between steps:')
-    def mouseCoords = new Label()
     def progressBar = new ProgressBar()
     def progressLabel = new Label('Progress: 0%')
     def startButton = new Button('Start [F2]', new Icon(PLAY))
     def stopButton = new Button('Stop [Esc]', new Icon(STOP))
-    def mouseCoordsButton = new Button('Capture mouse coords', new Icon(CURSOR))
-    def shallCaptureMouseCoordinates = false
+
+    def mouseCoordsCurrent = new Label()
+    def mouseCoordsCaptured = new Label()
+    def captureMouseButton = new Button('Capture coords [F4]', new Icon(CURSOR))
+    boolean shallCaptureMouseCoordinates
+
     def planRun = false
 
     @Override
@@ -64,10 +67,12 @@ class View extends VerticalLayout {
         def testPlanText = getTestPlanExecutionLines(testPlan)
         planExecutionArea.value = testPlanText
 
+        mouseCoordsCaptured.className = 'mouseCoordsCaptured'
+
         updateSleepBetweenStepsField()
         updateStartButton(attachEvent.UI, planExecutionArea, executor)
         updateStopButton(executor)
-        updateMouseCoordsButton()
+        updateCaptureMuseCoordsButton()
 
         def planExecutionLayout = new VerticalLayout(
                 planExecutionArea,
@@ -77,18 +82,19 @@ class View extends VerticalLayout {
                 )
         )
 
+        def accordionSection = new VerticalLayout(getMouseCaptureComponent(), getStepsDocumentation())
+        accordionSection.setHorizontalComponentAlignment(Alignment.START)
+
         pageLayout.add(
                 new H2('Automater'),
                 planExecutionLayout,
                 progressLabel,
                 progressBar,
-                mouseCoords,
                 new HorizontalLayout(
                         startButton,
-                        stopButton,
-                        mouseCoordsButton
+                        stopButton
                 ),
-                getStepsDocumentation()
+                accordionSection
         )
 
         add(pageLayout)
@@ -97,7 +103,7 @@ class View extends VerticalLayout {
         componentsThread.start()
     }
 
-    private updateSleepBetweenStepsField() {
+    private void updateSleepBetweenStepsField() {
         def defaultSleepTime = '100'
         sleepBetweenStepsField.value = defaultSleepTime
         sleepBetweenStepsField.addValueChangeListener({
@@ -115,9 +121,9 @@ class View extends VerticalLayout {
         componentsThread = null
     }
 
-    private updateStartButton(UI ui, TextArea planExecutionArea, PlanExecutor executor) {
+    private void updateStartButton(UI ui, TextArea planExecutionArea, PlanExecutor executor) {
         startButton.addClickShortcut(Key.F2)
-        startButton.addClickListener({
+        startButton.addClickListener {
             new Thread(new Runnable() {
                 @Override
                 void run() {
@@ -134,21 +140,23 @@ class View extends VerticalLayout {
                     }
                 }
             }).start()
-        })
+        }
     }
 
-    private updateStopButton(PlanExecutor executor) {
+    private void updateStopButton(PlanExecutor executor) {
         stopButton.addClickShortcut(Key.ESCAPE)
-        stopButton.addClickListener({
+        stopButton.addClickListener {
             executor.stop()
             Notification.show('Execution stopped', 1000, Notification.Position.MIDDLE)
-        })
+        }
     }
 
-    private updateMouseCoordsButton() {
-        mouseCoordsButton.addClickListener({
-            shallCaptureMouseCoordinates = !shallCaptureMouseCoordinates
-        })
+    private void updateCaptureMuseCoordsButton() {
+        def mouse = Beans.mouse
+        captureMouseButton.addClickShortcut(Key.F4)
+        captureMouseButton.addClickListener {
+            mouseCoordsCaptured.text = "MOUSE moveTo ${mouse.x} ${mouse.y}"
+        }
     }
 
     private String getTestPlanExecutionLines(ClassPathResource testPlan) {
@@ -179,9 +187,9 @@ class View extends VerticalLayout {
 
         private void updateMouseCoordinates(Mouse mouse) {
             if (shallCaptureMouseCoordinates) {
-                mouseCoords.text = "Mouse coordinates [ X: ${mouse.x}, Y: ${mouse.y} ]"
+                mouseCoordsCurrent.text = "Mouse coordinates = X: ${mouse.x}, Y: ${mouse.y}"
             } else {
-                mouseCoords.text = ''
+                mouseCoordsCurrent.text = ''
             }
         }
 
@@ -223,9 +231,21 @@ class View extends VerticalLayout {
         return upload
     }
 
-    private Component getStepsDocumentation() {
-        Accordion accordion = new Accordion()
+    private Component getMouseCaptureComponent() {
+        def layout = new VerticalLayout(
+                new HorizontalLayout(mouseCoordsCurrent, mouseCoordsCaptured),
+                captureMouseButton
+        )
 
+        Accordion accordion = new Accordion()
+        accordion.add('Mouse coordinates', layout)
+        accordion.addOpenedChangeListener {
+            shallCaptureMouseCoordinates = it.openedIndex.isPresent()
+        }
+        return accordion
+    }
+
+    private Component getStepsDocumentation() {
         def layout = new VerticalLayout()
         Steps.steps.values().toList().forEach({ description ->
             def addToPlanButton = new Button('Add')
@@ -239,6 +259,8 @@ class View extends VerticalLayout {
             def labels = new HorizontalLayout(addToPlanButton, lineExampleLabel, usageLabel)
             layout.add(labels)
         })
+
+        Accordion accordion = new Accordion()
         accordion.add('Example steps', layout)
     }
 }
