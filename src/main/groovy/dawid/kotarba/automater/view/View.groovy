@@ -21,11 +21,11 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.router.Route
-import dawid.kotarba.automater.Beans
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
 import dawid.kotarba.automater.executor.Steps
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
 
 import java.util.stream.Collectors
@@ -37,22 +37,31 @@ import static com.vaadin.flow.component.icon.VaadinIcon.*
 @CssImport('./styles/styles.css')
 class View extends VerticalLayout {
 
-    private Thread componentsThread
+    private def executor
+    private def mouse
 
-    def planExecutionArea = new TextArea('Execute a Plan:')
-    def sleepBetweenStepsField = new TextField('Sleep time between steps:')
-    def progressBar = new ProgressBar()
-    def progressLabel = new Label('Progress: 0%')
-    def startButton = new Button('Start [F2]', new Icon(PLAY))
-    def stopButton = new Button('Stop [Esc]', new Icon(STOP))
+    private def componentsThread
 
-    def mouseCoordsCurrent = new Label()
-    def mouseCoordsCaptured = new Label()
-    def captureMouseButton = new Button('Capture coords [F4]', new Icon(CURSOR))
-    def captureAddMouseButton = new Button('Capture and add coords [F8]', new Icon(CURSOR))
-    boolean shallCaptureMouseCoordinates
+    private def planExecutionArea = new TextArea('Execute a Plan:')
+    private def sleepBetweenStepsField = new TextField('Sleep time between steps:')
+    private def progressBar = new ProgressBar()
+    private def progressLabel = new Label('Progress: 0%')
+    private def startButton = new Button('Start [F2]', new Icon(PLAY))
+    private def stopButton = new Button('Stop [Esc]', new Icon(STOP))
 
-    def planRun = false
+    private def mouseCoordsCurrent = new Label()
+    private def mouseCoordsCaptured = new Label()
+    private def captureMouseButton = new Button('Capture coords [F4]', new Icon(CURSOR))
+    private def captureAddMouseButton = new Button('Capture and add coords [F8]', new Icon(CURSOR))
+    private boolean shallCaptureMouseCoordinates
+
+    private def planRun = false
+
+    @Autowired
+    View(PlanExecutor executor, Mouse mouse) {
+        this.executor = executor
+        this.mouse = mouse
+    }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -60,9 +69,6 @@ class View extends VerticalLayout {
         def pageLayout = new VerticalLayout()
         pageLayout.className = 'page'
         pageLayout.alignItems = Alignment.CENTER
-
-        def executor = Beans.planExecutor
-
         planExecutionArea.className = 'planExecutionArea'
         def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
         def testPlanText = getTestPlanExecutionLines(testPlan)
@@ -70,11 +76,11 @@ class View extends VerticalLayout {
 
         mouseCoordsCaptured.className = 'mouseCoordsCaptured'
 
-        updateSleepBetweenStepsField()
-        updateStartButton(attachEvent.UI, planExecutionArea, executor)
-        updateStopButton(executor)
-        updateCaptureMouseCoordsButton()
-        updateCaptureAddMouseCoordsButton()
+        setupSleepBetweenStepsField()
+        setupStartButton(attachEvent.UI, planExecutionArea, executor)
+        setupStopButton(executor)
+        setupCaptureMouseCoordsButton()
+        setupCaptureAddMouseCoordsButton()
 
         def planExecutionLayout = new VerticalLayout(
                 planExecutionArea,
@@ -105,7 +111,7 @@ class View extends VerticalLayout {
         componentsThread.start()
     }
 
-    private void updateSleepBetweenStepsField() {
+    private void setupSleepBetweenStepsField() {
         def defaultSleepTime = '100'
         sleepBetweenStepsField.value = defaultSleepTime
         sleepBetweenStepsField.addValueChangeListener({
@@ -123,7 +129,7 @@ class View extends VerticalLayout {
         componentsThread = null
     }
 
-    private void updateStartButton(UI ui, TextArea planExecutionArea, PlanExecutor executor) {
+    private void setupStartButton(UI ui, TextArea planExecutionArea, PlanExecutor executor) {
         startButton.addClickShortcut(Key.F2)
         startButton.addClickListener {
             new Thread(new Runnable() {
@@ -145,7 +151,7 @@ class View extends VerticalLayout {
         }
     }
 
-    private void updateStopButton(PlanExecutor executor) {
+    private void setupStopButton(PlanExecutor executor) {
         stopButton.addClickShortcut(Key.ESCAPE)
         stopButton.addClickListener {
             executor.stop()
@@ -153,16 +159,14 @@ class View extends VerticalLayout {
         }
     }
 
-    private void updateCaptureMouseCoordsButton() {
-        def mouse = Beans.mouse
+    private void setupCaptureMouseCoordsButton() {
         captureMouseButton.addClickShortcut(Key.F4)
         captureMouseButton.addClickListener {
             mouseCoordsCaptured.text = "MOUSE moveTo ${mouse.x} ${mouse.y}"
         }
     }
 
-    private void updateCaptureAddMouseCoordsButton() {
-        def mouse = Beans.mouse
+    private void setupCaptureAddMouseCoordsButton() {
         captureAddMouseButton.addClickShortcut(Key.F8)
         captureAddMouseButton.addClickListener {
             mouseCoordsCaptured.text = "MOUSE moveTo ${mouse.x} ${mouse.y}"
@@ -183,8 +187,6 @@ class View extends VerticalLayout {
 
         @Override
         void run() {
-            def mouse = Beans.mouse
-            def executor = Beans.planExecutor
             while (true) {
                 sleep(200)
                 ui.access {
