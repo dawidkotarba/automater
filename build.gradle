@@ -25,6 +25,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
     // Spock
     testImplementation "org.codehaus.groovy:groovy-all:2.5.13"
     testImplementation "org.spockframework:spock-core:2.0-M3-groovy-2.5"

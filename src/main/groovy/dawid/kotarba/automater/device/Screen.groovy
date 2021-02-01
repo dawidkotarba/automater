@@ -10,12 +10,12 @@ class Screen {
 
     int getWidth() {
         def gd = GraphicsEnvironment.localGraphicsEnvironment.defaultScreenDevice;
-        return gd.displayMode.width;
+        return gd.displayMode.width
     }
 
     int getHeight() {
         def gd = GraphicsEnvironment.localGraphicsEnvironment.defaultScreenDevice;
-        return gd.displayMode.height;
+        return gd.displayMode.height
     }
 
     Point getResolution() {
