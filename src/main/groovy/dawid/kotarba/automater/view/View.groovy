@@ -43,11 +43,10 @@ class View extends VerticalLayout {
 
     private def executor
     private def mouse
-
     private def componentsThread
-
     private def planExecutionArea = new TextArea('Execute a Plan:')
-    private def sleepBetweenStepsField = new TextField('Sleep time between steps (ms):')
+    private def planExecutionStatistics = new Label('')
+    private def sleepBetweenStepsField = new TextField('Sleep time between steps:')
     private def progressBar = new ProgressBar()
     private def progressLabel = new Label('Progress: 0%')
     private def startButton = new Button('Start [F2]', new Icon(PLAY))
@@ -100,7 +99,7 @@ class View extends VerticalLayout {
         pageLayout.add(
                 new H2('automater'),
                 planExecutionLayout,
-                progressLabel,
+                new HorizontalLayout(progressLabel, planExecutionStatistics),
                 progressBar,
                 new HorizontalLayout(
                         startButton,
@@ -140,15 +139,22 @@ class View extends VerticalLayout {
                 @Override
                 void run() {
                     try {
+                        ui.access {
+                            planExecutionStatistics.text = ''
+                        }
+
                         def plan = new Plan(planExecutionArea.value, Integer.parseInt(sleepBetweenStepsField.value))
                         planRun = true
-                        executor.start(plan)
+                        def statistics = executor.start(plan)
+                        ui.access {
+                            planExecutionStatistics.text = "(${statistics.stepsExecuted} steps executed in ${statistics.executionTime} ms)"
+                        }
                     } catch (Exception e) {
                         e.printStackTrace()
                         ui.access {
                             Notification.show(e.getMessage(), 3000, Notification.Position.MIDDLE)
-                            executor.stop()
                         }
+                        executor.stop()
                     }
                 }
             }).start()
