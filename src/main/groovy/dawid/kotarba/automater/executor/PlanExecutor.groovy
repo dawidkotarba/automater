@@ -23,7 +23,7 @@ class PlanExecutor {
         this.mouse = mouse
     }
 
-    synchronized PlanStatistics start(Plan plan) {
+    PlanStatistics start(Plan plan) {
         def stopWatch = new StopWatch()
         try {
             stopWatch.start()
