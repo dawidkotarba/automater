@@ -1,9 +1,9 @@
 .page {
-    width: 900px !important;
+    width: 1000px !important;
 }
 
 .planExecutionArea {
-    width: 850px;
+    width: 950px;
     font-family: monospace;
     font-size: large;
 }
