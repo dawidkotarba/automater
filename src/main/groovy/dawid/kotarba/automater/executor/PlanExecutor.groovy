@@ -34,7 +34,7 @@ class PlanExecutor {
             def executedStepsInLoop = 0
 
             while (started && loopExecution) {
-                executedStepsInLoop = executeSteps(plan)
+                executedStepsInLoop += executeSteps(plan)
             }
             stop()
             stopWatch.stop()
@@ -45,7 +45,7 @@ class PlanExecutor {
         }
     }
 
-    synchronized def stop() {
+    def stop() {
         started = false
         loopExecution = false
     }
