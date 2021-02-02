@@ -1,41 +1,51 @@
 package dawid.kotarba.automater.executor
 
-import dawid.kotarba.automater.Beans
 import dawid.kotarba.automater.Constants
 import dawid.kotarba.automater.device.Mouse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.util.StopWatch
 
 import java.lang.invoke.MethodHandles
 
 @Service
 class PlanExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
-
-    private final Mouse mouse = Beans.mouse
+    private Mouse mouse
     private double planProgress
     private boolean loopExecution
     private boolean started
 
-    def start(Plan plan) {
+    @Autowired
+    PlanExecutor(Mouse mouse) {
+        this.mouse = mouse
+    }
+
+    synchronized PlanStatistics start(Plan plan) {
+        def stopWatch = new StopWatch()
         try {
+            stopWatch.start()
             started = true
             validate(plan)
             loopExecution = shallLoopExecution(plan)
-            executeSteps(plan)
+            def executedSteps = executeSteps(plan)
+            def executedStepsInLoop = 0
 
             while (started && loopExecution) {
-                executeSteps(plan)
+                executedStepsInLoop = executeSteps(plan)
             }
             stop()
+            stopWatch.stop()
+            return new PlanStatistics(executedSteps + executedStepsInLoop, stopWatch.getTotalTimeMillis())
         }
         catch (Exception e) {
             throw new IllegalStateException(e.getMessage())
         }
     }
 
-    def stop() {
+    synchronized def stop() {
         started = false
         loopExecution = false
     }
@@ -52,25 +62,26 @@ class PlanExecutor {
         return loopExecution
     }
 
-    def validate(Plan plan) {
+    static def validate(Plan plan) {
         plan.executionLines.stream()
                 .map({ it.trim() })
                 .forEach { executionLine ->
-            def match = Steps.steps.keySet().stream().anyMatch { stepLine ->
-                def tokenizedExecutionLine = executionLine.tokenize()
-                tokenizedExecutionLine[0] == stepLine.getStepType().name() &&
-                        tokenizedExecutionLine[1] == stepLine.method.get() &&
-                        tokenizedExecutionLine.size() == 2 + stepLine.argumentsCount
-            }
+                    def match = Steps.steps.keySet().stream().anyMatch { stepLine ->
+                        def tokenizedExecutionLine = executionLine.tokenize()
+                        tokenizedExecutionLine[0] == stepLine.getStepType().name() &&
+                                tokenizedExecutionLine[1] == stepLine.method.get() &&
+                                tokenizedExecutionLine.size() == 2 + stepLine.argumentsCount
+                    }
 
-            if (!match && !isExecutionLineCommented(executionLine)) {
-                throw new UnsupportedOperationException("Validation error: $executionLine")
-            }
-        }
+                    if (!match && !isExecutionLineCommented(executionLine)) {
+                        throw new UnsupportedOperationException("Validation error: $executionLine")
+                    }
+                }
     }
 
 
-    def executeSteps(Plan plan) {
+    int executeSteps(Plan plan) {
+        def stepsExecuted = 0
         planProgress = 0
         for (int i = 0; i < plan.executionLines.size(); i++) {
             Steps.steps.keySet().forEach { step ->
@@ -78,7 +89,9 @@ class PlanExecutor {
                     if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
                         LOGGER.debug("Mouse is moving, skipping ${plan.executionLines[i]}")
                     } else if (!isExecutionLineCommented(plan.executionLines[i])) {
-                        step.executeIfApplicable(plan.executionLines[i])
+                        if (step.executeIfApplicable(plan.executionLines[i])) {
+                            stepsExecuted++
+                        }
                     }
                 } else {
                     return
@@ -89,6 +102,7 @@ class PlanExecutor {
             }
             planProgress = (i + 1) / plan.getExecutionLines().size() as double
         }
+        return stepsExecuted
     }
 
     private static boolean shallLoopExecution(Plan plan) {

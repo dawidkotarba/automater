@@ -10,5 +10,5 @@ interface Step {
 
     boolean isApplicable(String executionLine)
 
-    void executeIfApplicable(String executionLine)
+    boolean executeIfApplicable(String executionLine)
 }

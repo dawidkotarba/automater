@@ -148,4 +148,21 @@ class PlanExecutorTest extends Specification {
         mouse.y == 300
     }
 
+    def 'Should fill execution statistics'() {
+        given:
+        def plan = new Plan()
+        plan.addExecutionLine('MOUSE moveTo 100 100')
+        plan.addExecutionLine('MOUSE moveTo 200 300')
+        plan.addExecutionLine('MOUSE moveTo 500 500')
+
+        when:
+        def statistics = executor.start(plan)
+
+        then:
+        notThrown IllegalStateException
+
+        and:
+        statistics.getStepsExecuted() == 3
+        statistics.getExecutionTime() > 0
+    }
 }
