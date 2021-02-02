@@ -162,8 +162,8 @@ class PlanExecutorTest extends Specification {
         notThrown IllegalStateException
 
         and:
-        statistics.getStepsExecuted() == 3
-        statistics.getExecutionTime() > 0
+        statistics.stepsExecuted == 3
+        statistics.executionTime > 0
     }
 
     def 'Should fill execution statistics but skip commented lines as executed'() {
@@ -180,7 +180,7 @@ class PlanExecutorTest extends Specification {
         notThrown IllegalStateException
 
         and:
-        statistics.getStepsExecuted() == 2
-        statistics.getExecutionTime() > 0
+        statistics.stepsExecuted == 2
+        statistics.executionTime > 0
     }
 }
