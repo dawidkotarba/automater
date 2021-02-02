@@ -165,4 +165,22 @@ class PlanExecutorTest extends Specification {
         statistics.getStepsExecuted() == 3
         statistics.getExecutionTime() > 0
     }
+
+    def 'Should fill execution statistics but skip commented lines as executed'() {
+        given:
+        def plan = new Plan()
+        plan.addExecutionLine('MOUSE moveTo 100 100')
+        plan.addExecutionLine('# MOUSE moveTo 200 300')
+        plan.addExecutionLine('MOUSE moveTo 500 500')
+
+        when:
+        def statistics = executor.start(plan)
+
+        then:
+        notThrown IllegalStateException
+
+        and:
+        statistics.getStepsExecuted() == 2
+        statistics.getExecutionTime() > 0
+    }
 }
