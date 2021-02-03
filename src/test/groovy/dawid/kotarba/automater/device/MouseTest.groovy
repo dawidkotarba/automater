@@ -13,7 +13,7 @@ class MouseTest extends Specification {
     @Autowired
     private Screen screen
 
-    def "Should move a mouse to a given position"() {
+    def 'Should move a mouse to a given position'() {
         given:
         mouse.moveTo(0, 0)
         def initialX = mouse.x
@@ -29,7 +29,7 @@ class MouseTest extends Specification {
         initialY == newY - 1
     }
 
-    def "Should move a mouse by few pixels"() {
+    def 'Should move a mouse by few pixels'() {
         given:
         mouse.moveTo(1, 1)
 
@@ -43,7 +43,7 @@ class MouseTest extends Specification {
         newY == 2
     }
 
-    def "Should move a mouse by few pixels - negative"() {
+    def 'Should move a mouse by few pixels - negative'() {
         given:
         mouse.moveTo(1, 1)
 
@@ -57,7 +57,7 @@ class MouseTest extends Specification {
         newY == 0
     }
 
-    def "Should move a mouse to a middle of the screen in two steps"() {
+    def 'Should move a mouse to a middle of the screen in two steps'() {
         given:
         mouse.moveTo(0, 0)
 
@@ -71,7 +71,7 @@ class MouseTest extends Specification {
         mouse.y == screen.middle.y
     }
 
-    def "Should move a mouse to a middle of the screen immediately"() {
+    def 'Should move a mouse to a middle of the screen immediately'() {
         given:
         mouse.moveTo(0, 0)
 
@@ -81,5 +81,23 @@ class MouseTest extends Specification {
         then:
         mouse.x == screen.middle.x
         mouse.y == screen.middle.y
+    }
+
+    def 'Should indicate that a mouse was moving'() {
+        given:
+        !mouse.mouseMoving
+        mouse.moveTo(1, 1)
+
+        when:
+        mouse.moveBy(-1, -1)
+        def newX = mouse.x
+        def newY = mouse.y
+
+        then:
+        newX == 0
+        newY == 0
+
+        and:
+        mouse.mouseMoving
     }
 }

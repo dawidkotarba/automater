@@ -36,7 +36,7 @@ class ScreenTest extends Specification {
         resolution.y > 0
     }
 
-    def 'Should get a screen middle'() {
+    def 'Should get a screen middle point'() {
         given:
         def middle = screen.middle
 

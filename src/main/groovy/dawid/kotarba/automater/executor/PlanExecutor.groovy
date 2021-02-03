@@ -38,10 +38,10 @@ class PlanExecutor {
             }
             stop()
             stopWatch.stop()
-            return new PlanStatistics(executedSteps + executedStepsInLoop, stopWatch.getTotalTimeMillis())
+            return new PlanStatistics(executedSteps + executedStepsInLoop, stopWatch.totalTimeMillis)
         }
         catch (Exception e) {
-            throw new IllegalStateException(e.getMessage())
+            throw new IllegalStateException(e.message)
         }
     }
 
@@ -68,7 +68,7 @@ class PlanExecutor {
                 .forEach { executionLine ->
                     def match = Steps.steps.keySet().stream().anyMatch { stepLine ->
                         def tokenizedExecutionLine = executionLine.tokenize()
-                        tokenizedExecutionLine[0] == stepLine.getStepType().name() &&
+                        tokenizedExecutionLine[0] == stepLine.stepType.name() &&
                                 tokenizedExecutionLine[1] == stepLine.method.get() &&
                                 tokenizedExecutionLine.size() == 2 + stepLine.argumentsCount
                     }
@@ -100,7 +100,7 @@ class PlanExecutor {
             if (!isExecutionLineCommented(plan.executionLines[i])) {
                 sleep(plan.sleepBetweenSteps)
             }
-            planProgress = (i + 1) / plan.getExecutionLines().size() as double
+            planProgress = (i + 1) / plan.executionLines.size() as double
         }
         return stepsExecuted
     }
@@ -115,7 +115,7 @@ class PlanExecutor {
         def runWhenIdleMouse = executionLines.stream().anyMatch { line ->
             !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_IDLE)
         }
-        runWhenIdleMouse && mouse.isMouseMoving()
+        runWhenIdleMouse && mouse.mouseMoving
     }
 
     private static boolean isExecutionLineCommented(String executionLine) {

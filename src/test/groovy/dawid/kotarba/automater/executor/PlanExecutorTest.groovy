@@ -183,4 +183,45 @@ class PlanExecutorTest extends Specification {
         statistics.stepsExecuted == 2
         statistics.executionTime > 0
     }
+
+    def 'Should not execute any line when all are commented'() {
+        given:
+        def plan = new Plan()
+        plan.addExecutionLine('# MOUSE moveTo 100 100')
+        plan.addExecutionLine('# MOUSE moveTo 200 300')
+        plan.addExecutionLine('# MOUSE moveTo 500 500')
+
+        when:
+        def statistics = executor.start(plan)
+
+        then:
+        notThrown IllegalStateException
+
+        and:
+        statistics.stepsExecuted == 0
+        statistics.executionTime >= 0
+    }
+
+    def 'Should show proper plan statistics and progress'() {
+        given:
+        def plan = new Plan()
+        plan.addExecutionLine('MOUSE moveTo 100 100')
+        plan.addExecutionLine('MOUSE moveTo 200 300')
+        executor.planProgress == 0
+
+        when:
+        def statistics = executor.start(plan)
+
+        then:
+        notThrown IllegalStateException
+
+        and:
+        statistics.stepsExecuted == 2
+        statistics.executionTime > 0
+
+        and:
+        executor.planProgress == 1
+        !executor.loopPlan
+        !executor.started
+    }
 }
