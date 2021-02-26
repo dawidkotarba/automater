@@ -10,6 +10,8 @@ A very simple Java tool that can help you to automate manual and repetitive proc
 - can type characters and words
 - can move, scroll and click mouse
 - can repeat the whole execution plan and wait between steps
+- the execution plan can be started either by UI (`http://localhost:9999`) or REST
+  calls (`http://localhost:9999/start`, `http://localhost:9999/stop`)
 
 ## Screenshots
 
@@ -48,3 +50,22 @@ To change the default `9999` port:
 ```shell
 ./gradlew bootRun --args='--server.port=8888'
 ```
+
+## Start/Stop an execution plan by a REST call:
+
+- start:
+  Execute `POST` to `http://localhost:9999/start` with a body in below format:
+
+```json
+{
+  "sleepBetweenSteps": 100,
+  "executionLines": [
+    "MOUSE moveTo 100 100",
+    "SLEEP random 200",
+    "MOUSE moveTo 300 300"
+  ]
+}
+```
+
+- stop:
+  Execute `POST` to `http://localhost:9999/stop`.

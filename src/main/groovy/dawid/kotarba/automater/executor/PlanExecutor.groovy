@@ -80,7 +80,7 @@ class PlanExecutor {
     }
 
 
-    int executeSteps(Plan plan) {
+    private int executeSteps(Plan plan) {
         def stepsExecuted = 0
         planProgress = 0
         for (int i = 0; i < plan.executionLines.size(); i++) {
