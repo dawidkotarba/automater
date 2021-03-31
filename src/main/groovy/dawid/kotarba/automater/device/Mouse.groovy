@@ -16,8 +16,7 @@ class Mouse {
     private final Screen screen
     private int lastX = x
     private int lastY = y
-    private int inactiveLastX = x
-    private int inactiveLastY = y
+    private long lastTimeMoved = System.currentTimeSeconds()
 
     @Autowired
     Mouse(Screen screen) {
@@ -35,14 +34,12 @@ class Mouse {
 
     @Scheduled(fixedDelay = 500L)
     void saveLocation() {
+        if (isMouseMoving()) {
+            lastTimeMoved = System.currentTimeMillis()
+        }
+
         lastX = x
         lastY = y
-    }
-
-    @Scheduled(fixedDelay = 60000L)
-    void saveLocationForInactiveMouse() {
-        inactiveLastX = x
-        inactiveLastY = y
     }
 
     boolean isMouseMoving() {
@@ -50,7 +47,8 @@ class Mouse {
     }
 
     boolean isMouseActive() {
-        return x != inactiveLastX && y != inactiveLastY
+        def currentTimeMillis = System.currentTimeMillis()
+        return currentTimeMillis - lastTimeMoved < 60 * 1000 // a difference of a minute
     }
 
     void moveTo(int x, int y) {
