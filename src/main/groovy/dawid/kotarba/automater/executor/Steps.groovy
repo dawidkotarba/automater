@@ -29,6 +29,7 @@ class Steps {
 
         // keyboard
         addStep(new KeyboardPress(), 'KEYBOARD press a', 'Press a key')
+        addStep(new KeyboardPress(), 'KEYBOARD press WINDOWS', 'Press a key by name (i.e. CONTROL, ALT, SHIFT, TAB, BACKSPACE, ESCAPE)')
         addStep(new KeyboardHold(), 'KEYBOARD hold a', 'Holds a key')
         addStep(new KeyboardRelease(), 'KEYBOARD release a', 'Release a key')
         addStep(new KeyboardType(), 'KEYBOARD type abc', 'Types the given text')

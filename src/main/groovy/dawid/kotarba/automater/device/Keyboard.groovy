@@ -63,7 +63,11 @@ class Keyboard {
         TAB(KeyEvent.VK_TAB, null),
         BACKSPACE(KeyEvent.VK_BACK_SPACE, null),
         SPACE(KeyEvent.VK_SPACE, ' '),
-        EXCLAMATION_MARK(KeyEvent.VK_EXCLAMATION_MARK, '!')
+        EXCLAMATION_MARK(KeyEvent.VK_EXCLAMATION_MARK, '!'),
+        EQUALS(KeyEvent.VK_EQUALS, '='),
+        UNDERSCORE(KeyEvent.VK_UNDERSCORE, '_'),
+        WINDOWS(KeyEvent.VK_WINDOWS, null),
+        ESCAPE(KeyEvent.VK_ESCAPE, null)
 
         private int keyCode
         private String character
@@ -76,6 +80,12 @@ class Keyboard {
         static Optional<Button> getByChar(String character) {
             return Arrays.asList(values()).stream().filter({
                 it.character == character.toLowerCase()
+            }).findFirst()
+        }
+
+        static Optional<Button> getByName(String name) {
+            return Arrays.asList(values()).stream().filter({
+                it.name() == name.toUpperCase()
             }).findFirst()
         }
     }

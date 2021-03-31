@@ -8,7 +8,12 @@ class KeyboardPress extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def param = getStringParam(executionLine)
+
         Keyboard.Button.getByChar(param).ifPresent {
+            keyboard.press(it)
+        }
+
+        Keyboard.Button.getByName(param).ifPresent {
             keyboard.press(it)
         }
     }
