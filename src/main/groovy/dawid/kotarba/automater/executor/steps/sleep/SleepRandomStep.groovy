@@ -7,6 +7,11 @@ class SleepRandomStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def maxSleepTime = getIntParam(executionLine)
+
+        if (maxSleepTime <= 0) {
+            throw new IllegalArgumentException('Sleep time has to be a positive number')
+        }
+
         sleep(new Random().nextInt(maxSleepTime))
     }
 

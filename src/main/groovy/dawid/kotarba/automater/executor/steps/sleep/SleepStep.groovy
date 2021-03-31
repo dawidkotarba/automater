@@ -7,6 +7,11 @@ class SleepStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def sleepTime = getIntParam(executionLine)
+
+        if (sleepTime <= 0) {
+            throw new IllegalArgumentException('Sleep time has to be a positive number')
+        }
+
         sleep(sleepTime)
     }
 
