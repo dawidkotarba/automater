@@ -86,8 +86,8 @@ class PlanExecutor {
         for (int i = 0; i < plan.executionLines.size(); i++) {
             Steps.steps.keySet().forEach { step ->
                 if (started) {
-                    if (shallSkipWhenMouseIsMoving(plan.executionLines)) {
-                        LOGGER.debug("Mouse is moving, skipping ${plan.executionLines[i]}")
+                    if (shallSkipWhenMouseIsMoving(plan.executionLines) || shallSkipWhenMouseIsActive(plan.executionLines)) {
+                        LOGGER.debug("Mouse is moving/active, skipping ${plan.executionLines[i]}")
                     } else if (!isExecutionLineCommented(plan.executionLines[i])) {
                         if (step.executeIfApplicable(plan.executionLines[i])) {
                             stepsExecuted++
@@ -112,10 +112,17 @@ class PlanExecutor {
     }
 
     private boolean shallSkipWhenMouseIsMoving(List<String> executionLines) {
-        def runWhenIdleMouse = executionLines.stream().anyMatch { line ->
-            !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_IDLE)
+        def isSwitchEnabled = executionLines.stream().anyMatch { line ->
+            !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_NOT_MOVING)
         }
-        runWhenIdleMouse && mouse.mouseMoving
+        isSwitchEnabled && mouse.mouseMoving
+    }
+
+    private boolean shallSkipWhenMouseIsActive(List<String> executionLines) {
+        def isSwitchEnabled = executionLines.stream().anyMatch { line ->
+            !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_INACTIVE)
+        }
+        isSwitchEnabled && mouse.mouseActive
     }
 
     private static boolean isExecutionLineCommented(String executionLine) {

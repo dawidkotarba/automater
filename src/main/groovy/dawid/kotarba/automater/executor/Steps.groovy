@@ -18,7 +18,8 @@ import dawid.kotarba.automater.executor.steps.sleep.SleepRandomBetweenStep
 import dawid.kotarba.automater.executor.steps.sleep.SleepRandomStep
 import dawid.kotarba.automater.executor.steps.sleep.SleepStep
 import dawid.kotarba.automater.executor.switches.LoopSwitch
-import dawid.kotarba.automater.executor.switches.WhenMouseIdleSwitch
+import dawid.kotarba.automater.executor.switches.MouseInactiveSwitch
+import dawid.kotarba.automater.executor.switches.MouseNotMovingSwitch
 
 class Steps {
     private static Map<Step, Description> steps = [:]
@@ -26,7 +27,8 @@ class Steps {
     static {
         // switches
         addStep(new LoopSwitch(), 'SWITCH loop', 'Loop execution of a plan. Can be placed anywhere in the plan.')
-        addStep(new WhenMouseIdleSwitch(), 'SWITCH mouseIdle', 'Execute only when mouse does not move. Can be placed anywhere in the plan.')
+        addStep(new MouseNotMovingSwitch(), 'SWITCH mouseNotMoving', 'Execute only when mouse does not move. Can be placed anywhere in the plan.')
+        addStep(new MouseInactiveSwitch(), 'SWITCH mouseInactive', 'Execute only when mouse is inactive for 1 minute. Can be placed anywhere in the plan.')
 
         // keyboard
         addStep(new KeyboardPress(), 'KEYBOARD press a', 'Press a key')

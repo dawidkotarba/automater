@@ -3,7 +3,8 @@
 ###      Type your plan here or upload from file.       ###
 
 # SWITCH loop
-# SWITCH mouseIdle
+# SWITCH mouseNotMoving
+# SWITCH mouseInactive
 MOUSE moveTo 100 100
 SLEEP random 200
 MOUSE moveTo 300 300

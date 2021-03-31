@@ -3,18 +3,12 @@ package dawid.kotarba.automater.executor.switches
 import dawid.kotarba.automater.Constants
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
-import java.lang.invoke.MethodHandles
-
-class WhenMouseIdleSwitch extends AbstractStep {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+class MouseInactiveSwitch extends AbstractStep {
 
     @Override
     void execute(String executionLine) {
-        LOGGER.debug('Found WhenMouseIdleSwitch...')
+        // intentionally left blank
     }
 
     @Override
@@ -24,7 +18,7 @@ class WhenMouseIdleSwitch extends AbstractStep {
 
     @Override
     Optional<String> getMethod() {
-        Optional.of(Constants.SWITCH_MOUSE_IDLE)
+        Optional.of(Constants.SWITCH_MOUSE_INACTIVE)
     }
 
     @Override

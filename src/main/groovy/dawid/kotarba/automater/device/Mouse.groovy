@@ -16,6 +16,8 @@ class Mouse {
     private final Screen screen
     private int lastX = x
     private int lastY = y
+    private int inactiveLastX = x
+    private int inactiveLastY = y
 
     @Autowired
     Mouse(Screen screen) {
@@ -37,8 +39,18 @@ class Mouse {
         lastY = y
     }
 
+    @Scheduled(fixedDelay = 60000L)
+    void saveLocationForInactiveMouse() {
+        inactiveLastX = x
+        inactiveLastY = y
+    }
+
     boolean isMouseMoving() {
         return x != lastX || y != lastY
+    }
+
+    boolean isMouseActive() {
+        return x != inactiveLastX && y != inactiveLastY
     }
 
     void moveTo(int x, int y) {
