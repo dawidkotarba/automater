@@ -3,20 +3,17 @@ package dawid.kotarba.automater.executor.steps.sleep
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
+import static com.google.common.base.Preconditions.checkArgument
+
 class SleepRandomBetweenStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def params = getTwoIntParams(executionLine)
         def minSleepTime = params.first
         def maxSleepTime = params.second
+        checkArgument(minSleepTime >= 0 || maxSleepTime >= 0)
+        checkArgument(minSleepTime <= maxSleepTime)
 
-        if (minSleepTime <= 0 || maxSleepTime <= 0) {
-            throw new IllegalArgumentException('Sleep times must be positive')
-        }
-
-        if (minSleepTime >= maxSleepTime) {
-            throw new IllegalArgumentException('Minimal sleep time has to be bigger than maximal sleep time')
-        }
         sleep(new Random().nextInt(maxSleepTime - minSleepTime) + minSleepTime)
     }
 

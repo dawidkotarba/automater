@@ -3,11 +3,17 @@ package dawid.kotarba.automater.executor.steps.mouse
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
+import static com.google.common.base.Preconditions.checkArgument
+
 class MouseMoveToStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def params = getTwoIntParams(executionLine)
-        mouse.moveTo(params.first, params.second)
+        def x = params.first
+        def y = params.second
+        checkArgument(x >= 0 && y >= 0)
+
+        mouse.moveTo(x, y)
     }
 
     @Override

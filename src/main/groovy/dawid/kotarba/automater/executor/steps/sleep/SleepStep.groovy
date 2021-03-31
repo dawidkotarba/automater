@@ -3,14 +3,13 @@ package dawid.kotarba.automater.executor.steps.sleep
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
+import static com.google.common.base.Preconditions.checkArgument
+
 class SleepStep extends AbstractStep {
     @Override
     void execute(String executionLine) {
         def sleepTime = getIntParam(executionLine)
-
-        if (sleepTime <= 0) {
-            throw new IllegalArgumentException('Sleep time has to be a positive number')
-        }
+        checkArgument(sleepTime >= 0)
 
         sleep(sleepTime)
     }
