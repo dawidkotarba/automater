@@ -26,7 +26,7 @@ class Steps {
     static {
         // switches
         addStep(new LoopSwitch(), 'SWITCH loop', 'Loop execution of a plan. Can be placed anywhere in the plan.')
-        addStep(new WhenMouseIdleSwitch(), 'SWITCH mouseIdle', 'Execute only when mouse is idle. Can be placed anywhere in the plan.')
+        addStep(new WhenMouseIdleSwitch(), 'SWITCH mouseIdle', 'Execute only when mouse does not move. Can be placed anywhere in the plan.')
 
         // keyboard
         addStep(new KeyboardPress(), 'KEYBOARD press a', 'Press a key')
