@@ -6,7 +6,7 @@ plugins {
 
 group = 'dawid.kotarba'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "com.vaadin:vaadin-bom:14.4.6"
+        mavenBom 'com.vaadin:vaadin-bom:14.4.6'
     }
 }
 
@@ -28,9 +28,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
     // Spock
-    testImplementation "org.codehaus.groovy:groovy-all:2.5.13"
-    testImplementation "org.spockframework:spock-core:2.0-M3-groovy-2.5"
-    testImplementation "org.spockframework:spock-spring:2.0-M3-groovy-2.5"
+    testImplementation 'org.codehaus.groovy:groovy-all:2.5.13'
+    testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-2.5'
+    testImplementation 'org.spockframework:spock-spring:2.0-M3-groovy-2.5'
 }
 
 test {
