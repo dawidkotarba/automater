@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class AutomaterApplication {
 
     static void main(String[] args) {
+        System.setProperty('java.awt.headless', 'false')
         SpringApplication.run(AutomaterApplication, args)
     }
 }
