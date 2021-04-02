@@ -39,8 +39,13 @@ A very simple Java tool that can help you to automate manual and repetitive proc
 
 ## Run:
 
+- by using Gradle and Spring Boot run task:
 ```shell
 ./gradlew bootRun
+```
+- ... or just by running the jar:
+```shell
+java -jar build/libs/automater-0.0.1-SNAPSHOT.jar
 ```
 
 Then access the configuration page to start the plan: `http://localhost:9999`
