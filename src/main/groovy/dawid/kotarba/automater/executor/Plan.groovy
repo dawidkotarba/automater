@@ -14,7 +14,7 @@ class Plan {
     }
 
     Plan(String executionPlan, int sleepBetweenSteps) {
-        this.executionLines = PlanParser.parseToExecutionLines(executionPlan)
+        this.executionLines = parseToExecutionLines(executionPlan)
         this.sleepBetweenSteps = sleepBetweenSteps
     }
 
@@ -33,5 +33,9 @@ class Plan {
 
     int getSleepBetweenSteps() {
         return sleepBetweenSteps
+    }
+
+    private static List<String> parseToExecutionLines(String executionPlan) {
+        return executionPlan.tokenize(System.lineSeparator())
     }
 }

@@ -26,14 +26,12 @@ import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
 import dawid.kotarba.automater.executor.Steps
+import dawid.kotarba.automater.util.ClassPathReader
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.io.ClassPathResource
 
 import java.util.stream.Collectors
 
-import static com.vaadin.flow.component.icon.VaadinIcon.CURSOR
-import static com.vaadin.flow.component.icon.VaadinIcon.PLAY
-import static com.vaadin.flow.component.icon.VaadinIcon.STOP
+import static com.vaadin.flow.component.icon.VaadinIcon.*
 
 @Route
 @Push
@@ -73,8 +71,7 @@ class View extends VerticalLayout {
         pageLayout.className = 'page'
         pageLayout.alignItems = Alignment.CENTER
         planExecutionArea.className = 'planExecutionArea'
-        def testPlan = new ClassPathResource('plans/ExamplePlan.txt')
-        def testPlanText = getTestPlanExecutionLines(testPlan)
+        def testPlanText = ClassPathReader.readAsString('plans/ExamplePlan.txt')
         planExecutionArea.value = testPlanText
 
         mouseCoordsCaptured.className = 'mouseCoordsCaptured'
@@ -182,10 +179,6 @@ class View extends VerticalLayout {
             mouseCoordsCaptured.text = "MOUSE moveTo ${mouse.x} ${mouse.y}"
             planExecutionArea.value = "${planExecutionArea.value}\n${mouseCoordsCaptured.text}"
         }
-    }
-
-    private String getTestPlanExecutionLines(ClassPathResource testPlan) {
-        testPlan.file.readLines().stream().collect(Collectors.joining('\n'))
     }
 
     private class ComponentsRunnable implements Runnable {
