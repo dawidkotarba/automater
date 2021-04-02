@@ -38,3 +38,7 @@ test {
     useJUnitPlatform()
     testLogging.showStandardStreams = true
 }
+
+bootJar {
+    archiveFileName = 'automater.jar'
+}
