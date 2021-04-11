@@ -22,6 +22,7 @@ import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.spring.annotation.VaadinSessionScope
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
@@ -37,6 +38,7 @@ import static com.vaadin.flow.component.icon.VaadinIcon.*
 @Push
 @CssImport('./styles/styles.css')
 @PageTitle('automater')
+@VaadinSessionScope
 class View extends VerticalLayout {
 
     private def executor
@@ -56,12 +58,13 @@ class View extends VerticalLayout {
     private def captureAddMouseButton = new Button('Capture and add coords [F8]', new Icon(CURSOR))
     private boolean shallCaptureMouseCoordinates
 
-    private def planRun = false
+    private def planStarted
 
     @Autowired
     View(PlanExecutor executor, Mouse mouse) {
         this.executor = executor
         this.mouse = mouse
+        this.planStarted = executor.isStarted()
     }
 
     @Override
@@ -141,7 +144,7 @@ class View extends VerticalLayout {
                         }
 
                         def plan = new Plan(planExecutionArea.value, Integer.parseInt(sleepBetweenStepsField.value))
-                        planRun = true
+                        planStarted = true
                         def statistics = executor.start(plan)
                         ui.access {
                             planExecutionStatistics.text = "(${statistics.stepsExecuted} steps executed in ${statistics.executionTime} ms)"
@@ -218,7 +221,7 @@ class View extends VerticalLayout {
         }
 
         private void updateProgressBar(PlanExecutor executor) {
-            if (planRun) {
+            if (planStarted) {
                 if (!executor.started) {
                     progressBar.indeterminate = false
                     progressBar.value = 1
