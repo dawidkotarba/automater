@@ -1,10 +1,6 @@
 package dawid.kotarba.automater.view
 
-import com.vaadin.flow.component.AttachEvent
-import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.DetachEvent
-import com.vaadin.flow.component.Key
-import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.*
 import com.vaadin.flow.component.accordion.Accordion
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dependency.CssImport
@@ -47,6 +43,7 @@ class View extends VerticalLayout {
     private def planExecutionArea = new TextArea('Execute a Plan:')
     private def planExecutionStatistics = new Label('')
     private def sleepBetweenStepsField = new TextField('Sleep time between steps:')
+    private def executionTimeField = new TextField('Execution time (in sec):')
     private def progressBar = new ProgressBar()
     private def progressLabel = new Label('Progress: 0%')
     private def startButton = new Button('Start [F2]', new Icon(PLAY))
@@ -80,6 +77,7 @@ class View extends VerticalLayout {
         mouseCoordsCaptured.className = 'mouseCoordsCaptured'
 
         setupSleepBetweenStepsField()
+        setupExecutionTime()
         setupStartButton(attachEvent.UI, planExecutionArea, executor)
         setupStopButton(executor)
         setupCaptureMouseCoordsButton()
@@ -89,6 +87,7 @@ class View extends VerticalLayout {
                 planExecutionArea,
                 new HorizontalLayout(
                         sleepBetweenStepsField,
+                        executionTimeField,
                         getPlanUpload()
                 )
         )
@@ -126,6 +125,18 @@ class View extends VerticalLayout {
         })
     }
 
+    private void setupExecutionTime() {
+        def defaultExecutionTime = '3600'
+        executionTimeField.value = defaultExecutionTime
+        executionTimeField.addValueChangeListener({
+            if (!executionTimeField.value.matches('\\d+')) {
+                executionTimeField.value = defaultExecutionTime
+            } else if (Integer.parseInt(executionTimeField.value) < 0) {
+                executionTimeField.value = defaultExecutionTime
+            }
+        })
+    }
+
     @Override
     protected void onDetach(DetachEvent detachEvent) {
         componentsThread.interrupt()
@@ -143,7 +154,10 @@ class View extends VerticalLayout {
                             planExecutionStatistics.text = ''
                         }
 
-                        def plan = new Plan(planExecutionArea.value, Integer.parseInt(sleepBetweenStepsField.value))
+                        def plan = new Plan()
+                                .withExecutionPlan(planExecutionArea.value)
+                                .withSleepBetweenSteps(Integer.parseInt(sleepBetweenStepsField.value))
+                                .withMaxExecutionTime(Integer.parseInt(executionTimeField.value))
                         planStarted = true
                         def statistics = executor.start(plan)
                         ui.access {

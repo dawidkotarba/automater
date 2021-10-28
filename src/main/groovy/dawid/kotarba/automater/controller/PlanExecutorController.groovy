@@ -30,7 +30,11 @@ class PlanExecutorController {
         if (planExecutor.isStarted()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 'Another plan execution is in progress')
         }
-        def plan = new Plan(dto.executionLines, dto.sleepBetweenSteps)
+        def plan = new Plan()
+                .withExecutionLines(dto.executionLines)
+                .withMaxExecutionTime(dto.maxExecutionTimeSecs)
+                .withSleepBetweenSteps(dto.sleepBetweenSteps)
+
         def planStatistics = planExecutor.start(plan)
         return ResponseEntity.ok(planStatistics)
     }

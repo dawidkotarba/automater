@@ -6,7 +6,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.util.StopWatch
 
 import java.lang.invoke.MethodHandles
 
@@ -24,12 +23,14 @@ class PlanExecutor {
     }
 
     PlanStatistics start(Plan plan) {
-        def stopWatch = new StopWatch()
+        def startTime = System.currentTimeMillis()
         try {
-            stopWatch.start()
             started = true
             validate(plan)
             loopExecution = shallLoopExecution(plan)
+
+            checkPeriodicallyExecutionTime(startTime, plan.getmaxExecutionTimeSecs())
+
             def executedSteps = executeSteps(plan)
             def executedStepsInLoop = 0
 
@@ -37,12 +38,23 @@ class PlanExecutor {
                 executedStepsInLoop += executeSteps(plan)
             }
             stop()
-            stopWatch.stop()
-            return new PlanStatistics(executedSteps + executedStepsInLoop, stopWatch.totalTimeMillis)
+            return new PlanStatistics(executedSteps + executedStepsInLoop, getElapsedTime(startTime))
         }
         catch (Exception e) {
             throw new IllegalStateException(e.message)
         }
+    }
+
+    private checkPeriodicallyExecutionTime(startTime, long planExecutionTimeInSecs) {
+        new Thread(new Runnable() {
+            @Override
+            void run() {
+                while (started) {
+                    started = getElapsedTime(startTime) < planExecutionTimeInSecs * 1000
+                    sleep(1000)
+                }
+            }
+        }).start()
     }
 
     def stop() {
@@ -123,6 +135,11 @@ class PlanExecutor {
             !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_INACTIVE)
         }
         isSwitchEnabled && mouse.mouseActive
+    }
+
+    private long getElapsedTime(long startTime) {
+        def currentTime = System.currentTimeMillis()
+        return currentTime - startTime
     }
 
     private static boolean isExecutionLineCommented(String executionLine) {

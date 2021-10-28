@@ -9,10 +9,7 @@ import groovy.json.JsonBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import spock.lang.Specification
 
 import static org.springframework.http.MediaType.APPLICATION_JSON
@@ -40,6 +37,7 @@ class PlanExecutorControllerTest extends Specification {
         def plan = """
                     {
                         "sleepBetweenSteps": 10,
+                        "maxExecutionTimeSecs": 100,
                         "executionLines": [
                             "MOUSE moveTo 100 100",
                             "MOUSE moveTo 200 200",
@@ -51,11 +49,11 @@ class PlanExecutorControllerTest extends Specification {
         mouse.moveTo(0, 0)
 
         expect:
-        def result = mockMvc.perform(MockMvcRequestBuilders.post("/start")
+        def result = mockMvc.perform(post("/start")
                 .content(plan)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andReturn()
 
         and:

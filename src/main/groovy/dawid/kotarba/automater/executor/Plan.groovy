@@ -2,25 +2,35 @@ package dawid.kotarba.automater.executor
 
 class Plan {
     private static final int DEFAULT_SLEEP_BETWEEN_STEPS = 100
-    private int sleepBetweenSteps
+    private static final int DEFAULT_MAX_EXECUTION_TIME_SECS = 100
     private List<String> executionLines
+    private int sleepBetweenSteps
+    private int maxExecutionTimeSecs
 
     Plan() {
-        this(DEFAULT_SLEEP_BETWEEN_STEPS)
+        this.executionLines = []
+        this.sleepBetweenSteps = DEFAULT_SLEEP_BETWEEN_STEPS
+        this.maxExecutionTimeSecs = DEFAULT_MAX_EXECUTION_TIME_SECS
     }
 
-    Plan(int sleepBetweenSteps) {
-        this([], DEFAULT_SLEEP_BETWEEN_STEPS)
+    Plan withSleepBetweenSteps(int sleepBetweenSteps) {
+        this.sleepBetweenSteps = sleepBetweenSteps
+        return this
     }
 
-    Plan(String executionPlan, int sleepBetweenSteps) {
+    Plan withExecutionPlan(String executionPlan) {
         this.executionLines = parseToExecutionLines(executionPlan)
-        this.sleepBetweenSteps = sleepBetweenSteps
+        return this
     }
 
-    Plan(List<String> executionLines, int sleepBetweenSteps) {
+    Plan withExecutionLines(List<String> executionLines) {
         this.executionLines = executionLines
-        this.sleepBetweenSteps = sleepBetweenSteps
+        return this
+    }
+
+    Plan withMaxExecutionTime(int maxExecutionTimeSecs) {
+        this.maxExecutionTimeSecs = maxExecutionTimeSecs
+        return this
     }
 
     void addExecutionLine(String executionLine) {
@@ -33,6 +43,10 @@ class Plan {
 
     int getSleepBetweenSteps() {
         return sleepBetweenSteps
+    }
+
+    int getmaxExecutionTimeSecs() {
+        return maxExecutionTimeSecs
     }
 
     private static List<String> parseToExecutionLines(String executionPlan) {
