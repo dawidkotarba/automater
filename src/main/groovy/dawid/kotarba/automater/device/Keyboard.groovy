@@ -110,7 +110,7 @@ class Keyboard {
     }
 
     void type(String sentence) {
-        sentence.chars().each {
+        sentence.chars().forEach() {
             Button.getByChar(Character.toString(it)).ifPresent {
                 press(it)
             }
