@@ -10,6 +10,7 @@ A very simple Java tool that can help you to automate manual and repetitive proc
 - can type characters and words
 - can move, scroll and click mouse
 - can repeat the whole execution plan and wait between steps
+- can stop working after certain time
 - the execution plan can be started either by UI (`http://localhost:9999`) or REST
   calls (`http://localhost:9999/start`, `http://localhost:9999/stop`)
 
