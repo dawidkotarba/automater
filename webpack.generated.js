@@ -25,7 +25,7 @@ const themePartRegex = /(\\|\/)themes\1[\s\S]*?\1/;
 const frontendFolder = require('path').resolve(__dirname, 'frontend');
 
 const fileNameOfTheFlowGeneratedMainEntryPoint = require('path').resolve(__dirname, 'target/frontend/generated-flow-imports.js');
-const mavenOutputFolderForFlowBundledFiles = require('path').resolve(__dirname, 'target/classes/META-INF/VAADIN');
+const mavenOutputFolderForFlowBundledFiles = require('path').resolve(__dirname, 'build/resources/main/META-INF/VAADIN');
 
 const devmodeGizmoJS = '@vaadin/flow-frontend/VaadinDevmodeGizmo.js'
 
@@ -47,7 +47,7 @@ const projectStaticAssetsFolders = [
   frontendFolder
 ];
 
-const projectStaticAssetsOutputFolder = require('path').resolve(__dirname, 'target/classes/META-INF/VAADIN/static');
+const projectStaticAssetsOutputFolder = require('path').resolve(__dirname, 'build/resources/main/META-INF/VAADIN/static');
 
 // Folders in the project which can contain application themes
 const themeProjectFolders = projectStaticAssetsFolders.map((folder) =>
@@ -70,11 +70,11 @@ let stats;
 
 const transpile = !devMode || process.argv.find(v => v.indexOf('--transpile-es5') >= 0);
 
-// Open a connection with the Java dev-mode handler in order to finish
-// webpack-dev-mode when it exits or crashes.
-const watchDogPort = devMode && process.env.watchDogPort;
+const watchDogPrefix = '--watchDogPort=';
+let watchDogPort = devMode && process.argv.find(v => v.indexOf(watchDogPrefix) >= 0);
 let client;
 if (watchDogPort) {
+  watchDogPort = watchDogPort.substr(watchDogPrefix.length);
   const runWatchDog = () => {
     client = new require('net').Socket();
     client.setEncoding('utf8');
