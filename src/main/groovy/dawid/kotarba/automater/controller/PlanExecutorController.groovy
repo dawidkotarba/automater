@@ -1,8 +1,8 @@
 package dawid.kotarba.automater.controller
 
-import dawid.kotarba.automater.executor.Plan
-import dawid.kotarba.automater.executor.PlanExecutor
-import dawid.kotarba.automater.executor.PlanStatistics
+import dawid.kotarba.automater.service.executor.Plan
+import dawid.kotarba.automater.service.executor.PlanExecutor
+import dawid.kotarba.automater.service.executor.PlanStatistics
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

@@ -2,9 +2,9 @@ package dawid.kotarba.automater.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import dawid.kotarba.automater.device.Mouse
-import dawid.kotarba.automater.executor.Plan
-import dawid.kotarba.automater.executor.PlanExecutor
-import dawid.kotarba.automater.executor.PlanStatistics
+import dawid.kotarba.automater.service.executor.Plan
+import dawid.kotarba.automater.service.executor.PlanExecutor
+import dawid.kotarba.automater.service.executor.PlanStatistics
 import groovy.json.JsonBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc

@@ -3,7 +3,7 @@ package dawid.kotarba.automater
 import dawid.kotarba.automater.device.Keyboard
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.device.Screen
-import dawid.kotarba.automater.executor.PlanExecutor
+import dawid.kotarba.automater.service.executor.PlanExecutor
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 

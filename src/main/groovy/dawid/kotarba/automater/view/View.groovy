@@ -1,6 +1,11 @@
 package dawid.kotarba.automater.view
 
-import com.vaadin.flow.component.*
+
+import com.vaadin.flow.component.AttachEvent
+import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.DetachEvent
+import com.vaadin.flow.component.Key
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.accordion.Accordion
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dependency.CssImport
@@ -20,14 +25,16 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.annotation.VaadinSessionScope
 import dawid.kotarba.automater.device.Mouse
-import dawid.kotarba.automater.executor.Plan
-import dawid.kotarba.automater.executor.PlanExecutor
-import dawid.kotarba.automater.executor.Steps
+import dawid.kotarba.automater.service.executor.Plan
+import dawid.kotarba.automater.service.executor.PlanExecutor
+import dawid.kotarba.automater.service.executor.Steps
 import dawid.kotarba.automater.util.ClassPathReader
 
 import java.util.stream.Collectors
 
-import static com.vaadin.flow.component.icon.VaadinIcon.*
+import static com.vaadin.flow.component.icon.VaadinIcon.CURSOR
+import static com.vaadin.flow.component.icon.VaadinIcon.PLAY
+import static com.vaadin.flow.component.icon.VaadinIcon.STOP
 
 @Route
 @Push
@@ -251,7 +258,7 @@ class View extends VerticalLayout {
     private Component getPlanUpload() {
         def buffer = new MemoryBuffer()
         def upload = new Upload(buffer)
-        upload.uploadButton = new Button('Upload plan...')
+        upload.uploadButton = new Button('Import plan...')
         upload.dropLabel = new Label('Drop a file with plan here')
         upload.addSucceededListener({
             def executionPlan = buffer.inputStream.readLines().stream().collect(Collectors.joining('\n'))
