@@ -3,18 +3,17 @@ package dawid.kotarba.automater.executor.switches
 import dawid.kotarba.automater.Constants
 import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import java.lang.invoke.MethodHandles
 
 class LoopSwitch extends AbstractStep {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final def LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     void execute(String executionLine) {
-        LOGGER.debug("Found a LoopSwitch...")
+        LOGGER.debug('Found a LoopSwitch...')
     }
 
     @Override

@@ -1,11 +1,12 @@
 package dawid.kotarba.automater.device
 
-import org.springframework.beans.factory.annotation.Autowired
+
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 import java.awt.*
 import java.awt.event.InputEvent
+import java.util.concurrent.TimeUnit
 
 import static com.google.common.base.Preconditions.checkArgument
 
@@ -18,7 +19,6 @@ class Mouse {
     private int lastY = y
     private long lastTimeMoved = System.currentTimeSeconds()
 
-    @Autowired
     Mouse(Screen screen) {
         this.robot = new Robot()
         this.screen = screen
@@ -48,7 +48,7 @@ class Mouse {
 
     boolean isMouseActive() {
         def currentTimeMillis = System.currentTimeMillis()
-        return currentTimeMillis - lastTimeMoved < 60 * 1000 // a difference of a minute
+        return currentTimeMillis - lastTimeMoved < TimeUnit.MINUTES.toMillis(1)
     }
 
     void moveTo(int x, int y) {

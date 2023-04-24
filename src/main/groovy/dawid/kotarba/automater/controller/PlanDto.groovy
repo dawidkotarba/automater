@@ -1,14 +1,13 @@
 package dawid.kotarba.automater.controller
 
-import com.fasterxml.jackson.annotation.JsonCreator
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class PlanDto {
     private int sleepBetweenSteps
     private int maxExecutionTimeSecs
-    private List<String> executionLines
+    private Collection<String> executionLines
 
     int getSleepBetweenSteps() {
         return sleepBetweenSteps
@@ -18,7 +17,7 @@ class PlanDto {
         return maxExecutionTimeSecs
     }
 
-    List<String> getExecutionLines() {
+    Collection<String> getExecutionLines() {
         return executionLines
     }
 }

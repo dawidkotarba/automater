@@ -24,7 +24,6 @@ import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
 import dawid.kotarba.automater.executor.Steps
 import dawid.kotarba.automater.util.ClassPathReader
-import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.stream.Collectors
 
@@ -54,10 +53,8 @@ class View extends VerticalLayout {
     private def captureMouseButton = new Button('Capture coords [F4]', new Icon(CURSOR))
     private def captureAddMouseButton = new Button('Capture and add coords [F8]', new Icon(CURSOR))
     private boolean shallCaptureMouseCoordinates
-
     private def planStarted
 
-    @Autowired
     View(PlanExecutor executor, Mouse mouse) {
         this.executor = executor
         this.mouse = mouse

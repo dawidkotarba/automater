@@ -4,7 +4,6 @@ import dawid.kotarba.automater.device.Keyboard
 import dawid.kotarba.automater.device.Mouse
 import dawid.kotarba.automater.device.Screen
 import dawid.kotarba.automater.executor.PlanExecutor
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
@@ -15,7 +14,6 @@ class Beans {
     private static Keyboard keyboard
     private static PlanExecutor planExecutor
 
-    @Autowired
     @Lazy
     Beans(Screen screen, Mouse mouse, Keyboard keyboard, PlanExecutor planExecutor) {
         this.screen = screen
@@ -34,9 +32,5 @@ class Beans {
 
     static Keyboard getKeyboard() {
         return keyboard
-    }
-
-    static PlanExecutor getPlanExecutor() {
-        return planExecutor
     }
 }

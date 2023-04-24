@@ -39,7 +39,7 @@ abstract class AbstractStep implements Step {
 
     abstract void execute(String executionLine);
 
-    List<String> getParams(String executionLine) {
+    Collection<String> getParams(String executionLine) {
         def tokenizedExecutionLine = executionLine.tokenize()
         tokenizedExecutionLine.remove(getStepType().name())
         getMethod().ifPresent({

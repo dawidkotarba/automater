@@ -1,9 +1,14 @@
 package dawid.kotarba.automater.executor
 
+import org.slf4j.LoggerFactory
+
+import java.lang.invoke.MethodHandles
+
 class Plan {
+    private static final def LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int DEFAULT_SLEEP_BETWEEN_STEPS = 100
     private static final int DEFAULT_MAX_EXECUTION_TIME_SECS = 100
-    private List<String> executionLines
+    private Collection<String> executionLines
     private int sleepBetweenSteps
     private int maxExecutionTimeSecs
 
@@ -15,6 +20,7 @@ class Plan {
 
     Plan withSleepBetweenSteps(int sleepBetweenSteps) {
         if (sleepBetweenSteps <= 0) {
+            LOGGER.info("Sleep between steps has to be positive. Current value: $sleepBetweenSteps")
             this.sleepBetweenSteps = DEFAULT_SLEEP_BETWEEN_STEPS
         } else {
             this.sleepBetweenSteps = sleepBetweenSteps
@@ -27,13 +33,14 @@ class Plan {
         return this
     }
 
-    Plan withExecutionLines(List<String> executionLines) {
+    Plan withExecutionLines(Collection<String> executionLines) {
         this.executionLines = executionLines
         return this
     }
 
     Plan withMaxExecutionTime(int maxExecutionTimeSecs) {
         if (maxExecutionTimeSecs <= 0) {
+            LOGGER.info("Max execution time has to be positive. Current value: $maxExecutionTimeSecs")
             this.maxExecutionTimeSecs = DEFAULT_MAX_EXECUTION_TIME_SECS
         } else {
             this.maxExecutionTimeSecs = maxExecutionTimeSecs
@@ -45,7 +52,7 @@ class Plan {
         executionLines.add(executionLine)
     }
 
-    List<String> getExecutionLines() {
+    Collection<String> getExecutionLines() {
         return executionLines
     }
 
@@ -53,11 +60,11 @@ class Plan {
         return sleepBetweenSteps
     }
 
-    int getmaxExecutionTimeSecs() {
+    int getMaxExecutionTimeSecs() {
         return maxExecutionTimeSecs
     }
 
-    private static List<String> parseToExecutionLines(String executionPlan) {
+    private static Collection<String> parseToExecutionLines(String executionPlan) {
         return executionPlan.tokenize(System.lineSeparator())
     }
 }

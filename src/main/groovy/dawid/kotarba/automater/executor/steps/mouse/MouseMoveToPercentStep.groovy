@@ -4,7 +4,6 @@ import dawid.kotarba.automater.executor.AbstractStep
 import dawid.kotarba.automater.executor.StepType
 
 import static com.google.common.base.Preconditions.checkArgument
-import static com.google.common.base.Preconditions.checkArgument
 
 class MouseMoveToPercentStep extends AbstractStep {
     @Override

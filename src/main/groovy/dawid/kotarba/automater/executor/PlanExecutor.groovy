@@ -2,22 +2,20 @@ package dawid.kotarba.automater.executor
 
 import dawid.kotarba.automater.Constants
 import dawid.kotarba.automater.device.Mouse
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 import java.lang.invoke.MethodHandles
+import java.util.concurrent.TimeUnit
 
 @Service
 class PlanExecutor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
+    private static final def LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
     private Mouse mouse
     private double planProgress
     private boolean loopExecution
     private boolean started
 
-    @Autowired
     PlanExecutor(Mouse mouse) {
         this.mouse = mouse
     }
@@ -29,7 +27,7 @@ class PlanExecutor {
             validate(plan)
             loopExecution = shallLoopExecution(plan)
 
-            checkExecutionTimePeriodically(startTime, plan.getmaxExecutionTimeSecs())
+            checkExecutionTimePeriodically(startTime, plan.maxExecutionTimeSecs)
 
             def executedSteps = executeSteps(plan)
             def executedStepsInLoop = 0
@@ -45,12 +43,12 @@ class PlanExecutor {
         }
     }
 
-    private checkExecutionTimePeriodically(startTime, long planExecutionTimeInSecs) {
+    private checkExecutionTimePeriodically(long startTime, long planExecutionTimeInSecs) {
         new Thread(new Runnable() {
             @Override
             void run() {
                 while (started) {
-                    started = getElapsedTime(startTime) < planExecutionTimeInSecs * 1000
+                    started = getElapsedTime(startTime) < TimeUnit.SECONDS.toMillis(planExecutionTimeInSecs)
                     sleep(1000)
                 }
             }
@@ -123,23 +121,22 @@ class PlanExecutor {
         }
     }
 
-    private boolean shallSkipWhenMouseIsMoving(List<String> executionLines) {
+    private boolean shallSkipWhenMouseIsMoving(Collection<String> executionLines) {
         def isSwitchEnabled = executionLines.stream().anyMatch { line ->
             !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_NOT_MOVING)
         }
         isSwitchEnabled && mouse.mouseMoving
     }
 
-    private boolean shallSkipWhenMouseIsActive(List<String> executionLines) {
+    private boolean shallSkipWhenMouseIsActive(Collection<String> executionLines) {
         def isSwitchEnabled = executionLines.stream().anyMatch { line ->
             !isExecutionLineCommented(line) && line.trim().startsWith(StepType.SWITCH.name()) && line.contains(Constants.SWITCH_MOUSE_INACTIVE)
         }
         isSwitchEnabled && mouse.mouseActive
     }
 
-    private long getElapsedTime(long startTime) {
-        def currentTime = System.currentTimeMillis()
-        return currentTime - startTime
+    private static long getElapsedTime(long startTime) {
+        return System.currentTimeMillis() - startTime
     }
 
     private static boolean isExecutionLineCommented(String executionLine) {

@@ -3,7 +3,6 @@ package dawid.kotarba.automater.controller
 import dawid.kotarba.automater.executor.Plan
 import dawid.kotarba.automater.executor.PlanExecutor
 import dawid.kotarba.automater.executor.PlanStatistics
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -20,7 +19,6 @@ class PlanExecutorController {
 
     private PlanExecutor planExecutor
 
-    @Autowired
     PlanExecutorController(PlanExecutor planExecutor) {
         this.planExecutor = planExecutor
     }
