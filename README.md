@@ -4,7 +4,7 @@
 
 ## Description
 
-A very simple Java tool that can help you to automate manual and repetitive processes. Main features:
+A simple Java tool that can help you to automate manual and repetitive processes. Main features:
 
 - can be programmed by simple commands
 - can type characters and words
