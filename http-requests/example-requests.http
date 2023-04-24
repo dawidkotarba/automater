@@ -1,0 +1,18 @@
+### Run example plan from the REST API
+
+POST http://localhost:9999/start
+Content-Type: application/json
+
+{
+  "sleepBetweenSteps": 400,
+  "executionLines": [
+    "MOUSE moveTo 100 100",
+    "SLEEP random 1000",
+    "MOUSE moveTo 500 500",
+    "KEYBOARD press WINDOWS"
+  ]
+}
+
+### Stop the plan
+
+POST http://localhost:9999/stop

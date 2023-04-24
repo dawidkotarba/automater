@@ -14,7 +14,7 @@ class PlanDto {
         return sleepBetweenSteps
     }
 
-    int getmaxExecutionTimeSecs() {
+    int getMaxExecutionTimeSecs() {
         return maxExecutionTimeSecs
     }
 
