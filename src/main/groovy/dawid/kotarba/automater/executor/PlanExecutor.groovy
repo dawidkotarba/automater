@@ -29,7 +29,7 @@ class PlanExecutor {
             validate(plan)
             loopExecution = shallLoopExecution(plan)
 
-            checkPeriodicallyExecutionTime(startTime, plan.getmaxExecutionTimeSecs())
+            checkExecutionTimePeriodically(startTime, plan.getmaxExecutionTimeSecs())
 
             def executedSteps = executeSteps(plan)
             def executedStepsInLoop = 0
@@ -45,7 +45,7 @@ class PlanExecutor {
         }
     }
 
-    private checkPeriodicallyExecutionTime(startTime, long planExecutionTimeInSecs) {
+    private checkExecutionTimePeriodically(startTime, long planExecutionTimeInSecs) {
         new Thread(new Runnable() {
             @Override
             void run() {

@@ -14,7 +14,11 @@ class Plan {
     }
 
     Plan withSleepBetweenSteps(int sleepBetweenSteps) {
-        this.sleepBetweenSteps = sleepBetweenSteps
+        if (sleepBetweenSteps <= 0) {
+            this.sleepBetweenSteps = DEFAULT_SLEEP_BETWEEN_STEPS
+        } else {
+            this.sleepBetweenSteps = sleepBetweenSteps
+        }
         return this
     }
 
@@ -29,7 +33,11 @@ class Plan {
     }
 
     Plan withMaxExecutionTime(int maxExecutionTimeSecs) {
-        this.maxExecutionTimeSecs = maxExecutionTimeSecs
+        if (maxExecutionTimeSecs <= 0) {
+            this.maxExecutionTimeSecs = DEFAULT_MAX_EXECUTION_TIME_SECS
+        } else {
+            this.maxExecutionTimeSecs = maxExecutionTimeSecs
+        }
         return this
     }
 

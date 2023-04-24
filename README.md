@@ -64,11 +64,13 @@ To change the default `9999` port:
 
 ```json
 {
-  "sleepBetweenSteps": 100,
+  "sleepBetweenSteps": 400,
+  "maxExecutionTimeSecs": 30,
   "executionLines": [
     "MOUSE moveTo 100 100",
     "SLEEP random 200",
-    "MOUSE moveTo 300 300"
+    "MOUSE moveTo 500 500",
+    "KEYBOARD press WINDOWS"
   ]
 }
 ```
