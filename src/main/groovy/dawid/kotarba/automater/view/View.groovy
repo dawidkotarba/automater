@@ -1,6 +1,5 @@
 package dawid.kotarba.automater.view
 
-
 import com.vaadin.flow.component.AttachEvent
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.DetachEvent
@@ -25,6 +24,7 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.annotation.VaadinSessionScope
 import dawid.kotarba.automater.device.Mouse
+import dawid.kotarba.automater.service.converter.PlanToJsonConverter
 import dawid.kotarba.automater.service.executor.Plan
 import dawid.kotarba.automater.service.executor.PlanExecutor
 import dawid.kotarba.automater.service.executor.Steps
@@ -43,22 +43,31 @@ import static com.vaadin.flow.component.icon.VaadinIcon.STOP
 @VaadinSessionScope
 class View extends VerticalLayout {
 
-    private def executor
-    private def mouse
+    private UI ui
+    private PlanExecutor executor
+    private Mouse mouse
     private def componentsThread
-    private def planExecutionArea = new TextArea('Execute a Plan:')
-    private def planExecutionStatistics = new Label('')
-    private def sleepBetweenStepsField = new TextField('Sleep time between steps:')
-    private def executionTimeField = new TextField('Execution time (in sec):')
-    private def progressBar = new ProgressBar()
-    private def progressLabel = new Label('Progress: 0%')
-    private def startButton = new Button('Start [F2]', new Icon(PLAY))
-    private def stopButton = new Button('Stop [Esc]', new Icon(STOP))
+    private PlanToJsonConverter planToJsonConverter = new PlanToJsonConverter()
 
-    private def mouseCoordsCurrent = new Label()
-    private def mouseCoordsCaptured = new Label()
-    private def captureMouseButton = new Button('Capture coords [F4]', new Icon(CURSOR))
-    private def captureAddMouseButton = new Button('Capture and add coords [F8]', new Icon(CURSOR))
+    private TextArea planExecutionArea = new TextArea('Execute a Plan:')
+    private TextArea planAsJsonArea = new TextArea('Pan as JSON:')
+
+    private TextField sleepBetweenStepsField = new TextField('Sleep time between steps:')
+    private TextField executionTimeField = new TextField('Execution time (in sec):')
+
+    private ProgressBar progressBar = new ProgressBar()
+
+    private Button startButton = new Button('Start [F2]', new Icon(PLAY))
+    private Button stopButton = new Button('Stop [Esc]', new Icon(STOP))
+    private Button captureMouseButton = new Button('Capture coords [F4]', new Icon(CURSOR))
+    private Button captureAddMouseButton = new Button('Capture and add coords [F8]', new Icon(CURSOR))
+
+    private Label planExecutionStatistics = new Label('')
+    private Label mouseCoordsCurrent = new Label()
+    private Label mouseCoordsCaptured = new Label()
+    private Label progressLabel = new Label('Progress: 0%')
+
+
     private boolean shallCaptureMouseCoordinates
     private def planStarted
 
@@ -70,20 +79,19 @@ class View extends VerticalLayout {
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
+        ui = attachEvent.getUI()
         alignItems = Alignment.CENTER
         def pageLayout = new VerticalLayout()
         pageLayout.className = 'page'
         pageLayout.alignItems = Alignment.CENTER
-        planExecutionArea.className = 'planExecutionArea'
-        def testPlanText = ClassPathReader.readAsString('plans/ExamplePlan.txt')
-        planExecutionArea.value = testPlanText
 
         mouseCoordsCaptured.className = 'mouseCoordsCaptured'
 
+        setupPlanExecutionArea()
         setupSleepBetweenStepsField()
         setupExecutionTime()
-        setupStartButton(attachEvent.UI, planExecutionArea, executor)
-        setupStopButton(executor)
+        setupStartButton()
+        setupStopButton()
         setupCaptureMouseCoordsButton()
         setupCaptureAddMouseCoordsButton()
 
@@ -96,7 +104,7 @@ class View extends VerticalLayout {
                 )
         )
 
-        def accordionSection = new VerticalLayout(getMouseCaptureComponent(), getStepsDocumentation())
+        def accordionSection = new VerticalLayout(getMouseCaptureComponent(), getStepsDocumentation(), getJsonPlanArea())
         accordionSection.setHorizontalComponentAlignment(Alignment.START)
 
         pageLayout.add(
@@ -113,8 +121,17 @@ class View extends VerticalLayout {
 
         add(pageLayout)
 
-        componentsThread = new Thread(new ComponentsRunnable(attachEvent.UI))
+        componentsThread = new Thread(new ComponentsRunnable())
         componentsThread.start()
+    }
+
+    private setupPlanExecutionArea() {
+        planExecutionArea.className = 'planExecutionArea'
+        def testPlanText = ClassPathReader.readAsString('plans/ExamplePlan.txt')
+        planExecutionArea.value = testPlanText
+        planExecutionArea.addValueChangeListener {
+            updatePlanAsJsonArea()
+        }
     }
 
     private void setupSleepBetweenStepsField() {
@@ -126,6 +143,7 @@ class View extends VerticalLayout {
             } else if (Integer.parseInt(sleepBetweenStepsField.value) < 0) {
                 sleepBetweenStepsField.value = defaultSleepTime
             }
+            updatePlanAsJsonArea()
         })
     }
 
@@ -138,6 +156,7 @@ class View extends VerticalLayout {
             } else if (Integer.parseInt(executionTimeField.value) < 0) {
                 executionTimeField.value = defaultExecutionTime
             }
+            updatePlanAsJsonArea()
         })
     }
 
@@ -147,7 +166,7 @@ class View extends VerticalLayout {
         componentsThread = null
     }
 
-    private void setupStartButton(UI ui, TextArea planExecutionArea, PlanExecutor executor) {
+    private void setupStartButton() {
         startButton.addClickShortcut(Key.F2)
         startButton.addClickListener {
             new Thread(new Runnable() {
@@ -179,7 +198,7 @@ class View extends VerticalLayout {
         }
     }
 
-    private void setupStopButton(PlanExecutor executor) {
+    private void setupStopButton() {
         stopButton.addClickShortcut(Key.ESCAPE)
         stopButton.addClickListener {
             executor.stop()
@@ -203,26 +222,20 @@ class View extends VerticalLayout {
     }
 
     private class ComponentsRunnable implements Runnable {
-        private final UI ui
-
-        ComponentsRunnable(UI ui) {
-            this.ui = ui
-        }
-
         @Override
         void run() {
             while (true) {
                 sleep(200)
                 ui.access {
-                    updateMouseCoordinates(mouse)
-                    updateProgressBar(executor)
-                    updateStartButton(executor)
-                    updateStopButton(executor)
+                    updateMouseCoordinates()
+                    updateProgressBar()
+                    updateStartButton()
+                    updateStopButton()
                 }
             }
         }
 
-        private void updateMouseCoordinates(Mouse mouse) {
+        private void updateMouseCoordinates() {
             if (shallCaptureMouseCoordinates) {
                 mouseCoordsCurrent.text = "Mouse coordinates = X: ${mouse.x}, Y: ${mouse.y}"
             } else {
@@ -230,15 +243,15 @@ class View extends VerticalLayout {
             }
         }
 
-        private void updateStartButton(PlanExecutor executor) {
+        private void updateStartButton() {
             startButton.enabled = !executor.started
         }
 
-        private void updateStopButton(PlanExecutor executor) {
+        private void updateStopButton() {
             stopButton.enabled = executor.started
         }
 
-        private void updateProgressBar(PlanExecutor executor) {
+        private void updateProgressBar() {
             if (planStarted) {
                 if (!executor.started) {
                     progressBar.indeterminate = false
@@ -253,6 +266,11 @@ class View extends VerticalLayout {
                 }
             }
         }
+    }
+
+    private updatePlanAsJsonArea() {
+        def planAsJson = planToJsonConverter.convertToJson(planExecutionArea.value, sleepBetweenStepsField.value, executionTimeField.value)
+        this.planAsJsonArea.value = planAsJson
     }
 
     private Component getPlanUpload() {
@@ -301,6 +319,18 @@ class View extends VerticalLayout {
         def accordion = new Accordion()
         accordion.close()
         accordion.add('Example steps', layout)
+        return accordion
+    }
+
+    private Component getJsonPlanArea() {
+        def accordion = new Accordion()
+        planAsJsonArea.readOnly = true
+        planAsJsonArea.className = 'planExecutionArea'
+        def layout = new VerticalLayout()
+        updatePlanAsJsonArea()
+        layout.add(planAsJsonArea)
+        accordion.close()
+        accordion.add('Show Plan as JSON', layout)
         return accordion
     }
 }
