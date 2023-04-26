@@ -4,7 +4,7 @@
 
 ## Description
 
-A very simple Java tool that can help you to automate manual and repetitive processes. Main features:
+A simple Java tool that can help you to automate manual and repetitive processes. Main features:
 
 - can be programmed by simple commands
 - can type characters and words
@@ -44,7 +44,7 @@ A very simple Java tool that can help you to automate manual and repetitive proc
 ```shell
 ./gradlew bootRun
 ```
-- ... or just by running the jar:
+- ... or just by running the jar (can be downloaded [here](https://github.com/dawidkotarba/automater/releases/latest/download/automater.jar):
 ```shell
 java -jar build/libs/automater.jar
 ```
