@@ -1,8 +1,10 @@
 package dawid.kotarba.automater.service.executor
 
+import groovy.json.JsonOutput
 import org.slf4j.LoggerFactory
 
 import java.lang.invoke.MethodHandles
+import java.util.stream.Collectors
 
 class Plan {
     private static final def LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -62,6 +64,25 @@ class Plan {
 
     int getMaxExecutionTimeSecs() {
         return maxExecutionTimeSecs
+    }
+
+    String toJson() {
+        def executionLines = executionLines
+                .stream()
+                .filter({ !it.startsWith("#") })
+                .map({ "\"$it\"" })
+                .collect(Collectors.toList())
+
+        def json =
+                """
+            {
+              "sleepBetweenSteps": ${sleepBetweenSteps},
+              "maxExecutionTimeSecs": ${maxExecutionTimeSecs},
+              "executionLines": ${executionLines}
+            }
+        """
+
+        return JsonOutput.prettyPrint(json)
     }
 
     private static Collection<String> parseToExecutionLines(String executionPlan) {

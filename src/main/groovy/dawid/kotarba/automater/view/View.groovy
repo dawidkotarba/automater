@@ -24,7 +24,6 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.spring.annotation.VaadinSessionScope
 import dawid.kotarba.automater.device.Mouse
-import dawid.kotarba.automater.service.converter.PlanToJsonConverter
 import dawid.kotarba.automater.service.executor.Plan
 import dawid.kotarba.automater.service.executor.PlanExecutor
 import dawid.kotarba.automater.service.executor.Steps
@@ -47,10 +46,9 @@ class View extends VerticalLayout {
     private PlanExecutor executor
     private Mouse mouse
     private def componentsThread
-    private PlanToJsonConverter planToJsonConverter = new PlanToJsonConverter()
 
     private TextArea planExecutionArea = new TextArea('Execute a Plan:')
-    private TextArea planAsJsonArea = new TextArea('Pan as JSON:')
+    private TextArea planAsJsonArea = new TextArea('Plan as JSON:')
 
     private TextField sleepBetweenStepsField = new TextField('Sleep time between steps:')
     private TextField executionTimeField = new TextField('Execution time (in sec):')
@@ -125,6 +123,13 @@ class View extends VerticalLayout {
         componentsThread.start()
     }
 
+    private Plan getPlan() {
+        return new Plan()
+                .withExecutionPlan(planExecutionArea.value)
+                .withSleepBetweenSteps(Integer.parseInt(sleepBetweenStepsField.value))
+                .withMaxExecutionTime(Integer.parseInt(executionTimeField.value))
+    }
+
     private setupPlanExecutionArea() {
         planExecutionArea.className = 'planExecutionArea'
         def testPlanText = ClassPathReader.readAsString('plans/ExamplePlan.txt')
@@ -177,10 +182,6 @@ class View extends VerticalLayout {
                             planExecutionStatistics.text = ''
                         }
 
-                        def plan = new Plan()
-                                .withExecutionPlan(planExecutionArea.value)
-                                .withSleepBetweenSteps(Integer.parseInt(sleepBetweenStepsField.value))
-                                .withMaxExecutionTime(Integer.parseInt(executionTimeField.value))
                         planStarted = true
                         def statistics = executor.start(plan)
                         ui.access {
@@ -269,8 +270,7 @@ class View extends VerticalLayout {
     }
 
     private updatePlanAsJsonArea() {
-        def planAsJson = planToJsonConverter.convertToJson(planExecutionArea.value, sleepBetweenStepsField.value, executionTimeField.value)
-        this.planAsJsonArea.value = planAsJson
+        this.planAsJsonArea.value = plan.toJson()
     }
 
     private Component getPlanUpload() {
