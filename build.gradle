@@ -21,18 +21,15 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy'
-    implementation 'org.codehaus.groovy:groovy-json:2.5.22'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.17'
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'com.vaadin:vaadin-spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    
-    // Spock
-    testImplementation 'org.codehaus.groovy:groovy-all:2.5.13'
-    testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-2.5'
-    testImplementation 'org.spockframework:spock-spring:2.0-M3-groovy-2.5'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
 }
 
 test {
