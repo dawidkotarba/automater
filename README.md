@@ -49,9 +49,14 @@ A simple Java tool that can help you to automate manual and repetitive processes
 java -jar build/libs/automater.jar
 ```
 
-Then access the configuration page to start the plan: `http://localhost:9999`
+Then access the configuration page to start the plan: `http://localhost:9999`.
 
-To change the default `9999` port:
+- To start the app without the access from another computer:
+```shell
+java -jar build/libs/automater.jar --server.address=127.0.0.1
+```
+
+- To change the default `9999` port:
 
 ```shell
 ./gradlew bootRun --args='--server.port=8888'
