@@ -57,7 +57,10 @@ java -jar build/libs/automater.jar --server.address=127.0.0.1
 ```
 
 - To change the default `9999` port:
-
+```shell
+java -jar build/libs/automater.jar --server.port=8888
+```
+or
 ```shell
 ./gradlew bootRun --args='--server.port=8888'
 ```
